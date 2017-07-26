@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<head>
+<title>ProvThreads Visualization</title>
+	<meta http-equiv="content-type" content="text/html;charset=utf-8" />
+	<link rel="stylesheet" href="./styles/simple-style.css">
+	<link rel="stylesheet" href="./libraries/font-awesome-4.7.0/css/font-awesome.min.css">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+</head>
+
+<style>
+.track {
+  stroke: #000;
+  stroke-opacity: 0.3;
+  stroke-width: 10px;
+}
+
+div.relative {
+    position: relative;
+    width: 800px;
+    height: 350px;
+    border: 3px solid #73AD21;
+}
+
+div.absolute {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+}
+
+.track-inset {
+  stroke: #ddd;
+  stroke-width: 8px;
+}
+
+.track-overlay {
+  pointer-events: stroke;
+  stroke-width: 50px;
+  cursor: crosshair;
+}
+
+<!-.axis text {
+	font-size: 20px;
+} ->
+
+.tooltip {
+	background: #D791E8;
+}
+</style>
+
+
+<body>
+
+
+<div id="panel">
+
+  <div id="panelCaller"> Control Panel  &nbsp;  &nbsp;</div>
+
+	<br />
+	<br />
+	<p1> &nbsp; Select a Dataset: </p1>
+	<select id="sources_dataset" name="sources_dataset">
+		<option value = 1,"Arms" selected>Arms Dealing</option>
+		<option value = 2,"Terrorist">Terrorist Activity</option>
+		<option value = 3,"Disappearance">Employees Disappearance</option>
+	</select>​
+
+	<br />
+	<br />
+
+	<p1> &nbsp; Select Participant: </p1>
+	<select id="json_sources" name="json_sources">
+		<option value ="P1" selected>P1</option>
+    <option value ="P2">P2</option>
+	<option value ="P3">P3</option>
+	<option value ="P4">P4</option>
+	<option value ="P5">P5</option>
+	<option value ="P6">P6</option>
+	<option value ="P7">P7</option>
+	<option value ="P8">P8</option>
+	</select>​
+
+	<br />
+	<br />
+
+	<p3> &nbsp; Number of Topics: </p3>
+	<select id="classNum" name="classNum">
+		<option value ="3">3</option>
+		<option value ="4">4</option>
+		<option value ="5">5</option>
+		<option value ="6" selected>6</option>
+		<option value ="7">7</option>
+		<option value ="8">8</option>
+		<option value ="9">9</option>
+		<option value ="10" >10</option>
+	</select>​
+
+	<br />
+	<br />
+	<br />
+	<br />
+
+	<p2>  &nbsp; Threads Type: </p2>
+	<select id="thread_type" name="thread_type">
+		<option value ="topicThread" >Topic Threads</option>
+		<option value ="topicInterest">Topic Interests</option>
+		<option value ="analysistask" selected>Segmented Tasks</option>
+		<option value ="analysistask2">Segmented Tasks 2</option>
+	</select>​
+
+	<br />
+	<br />
+	<p3>  &nbsp; Topics Modeling: </p3>
+	<select id="T_Method" name="T_Method">
+		<option value ="-80-30-">80-30</option>
+		<option value ="-20-10-" >20-10</option>
+		<option value ="-10-5-" >10-5</option>
+		<option value ="-UModel-" selected>U/Model</option>
+	</select>​
+
+	<select id="E_Method" name="E_Method">
+		- <option value ="NTF"selected>W/Count</option>
+	</select>​
+
+	<br />
+	<br />  &nbsp; Control Pannel:
+
+		<form name="formSection">
+			<br />
+			<g>
+			<input type="checkbox" id="patternIcons" name="patternIcons">Show Interactions Pattern</br>
+			</g>
+			<!-- <input type="checkbox" id="NarrativeView" name="NarrativeView">Show Narrative Tooltips</br> -->
+			<!-- </g> -->
+			<!-- <g> -->
+			<!-- <input type="checkbox" id="visibility" name="visibility">Show Data Points</br> -->
+			<!-- </g> -->
+			<!-- <g>
+			<input type="checkbox" id="macroMicro" name="macroMicro">Macro/Micro View</br>
+			</g> -->
+			<g>
+			<input type="checkbox" id="thinkAloud" name="thinkAloud">Think-aloud Segments</br>
+			</g>
+			<!-- <g> -->
+			<!-- <input type="checkbox" id="ProvSegments" name="ProvSegments">ProvThreads Segments</br> -->
+			<!-- </g> -->
+
+			<!-- &nbsp; Select a Lens: -->
+			<!-- <div id="select-data"></div> -->
+			<!-- </br> -->
+	</form>
+
+	<p2>  &nbsp; Select Interactions: </p2>
+	<form name="InteractSection">
+		</br>
+		<g>
+		<input type="checkbox" id="opens" name="opens" >Open Document</br>
+		</g>
+
+		<g>
+		<input type="checkbox" id="search" name="search">Search </br>
+		</g>
+
+		<g>
+		<input type="checkbox" id="Highlights" name="Highlights"> Highlight</br>
+		<g>
+
+		<g>
+		<input type="checkbox" id="Notes" name="Notes" >Writing Notes</br>
+		<g>
+
+		<g>
+		<input type="checkbox" id="connections" name="connections" >Linking Documents</br>
+		<g>
+
+		<g>
+		<input type="checkbox" id="note" name="note" >Make a New Note</br>
+		</g>
+		</br>
+	</form>
+
+	</br>
+	</br>
+		<div id="Slider1Div"></div>
+	</br>
+	</br>
+		<div id="Slider2Div"></div>
+
+	</br>
+	</br>
+	
+	&nbsp; Time Segments:  <input type="button" value="Download" onclick="saveIt()"> 
+	</br>
+	</br>
+	&nbsp;  Segmentation Error:  <input type="button" value="Download" onclick="saveIt2()">
+	
+    </br>
+	</br>
+	</br>
+	</br>
+</div>
+
+<br />
+<br />
+	
+	<div id="chartDiv"></div>	
+	<div id="WordListsDiv"></div>
+
+	<script src="./libraries/d3.min.js"></script>
+	<script src="./libraries/fisheye.js"></script>
+	<script src="./libraries/rebind.js"></script>
+	<script src="./scripts/main.js"></script>
+
+</body>
+</html>
