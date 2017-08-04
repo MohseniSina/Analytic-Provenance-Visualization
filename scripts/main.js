@@ -20,7 +20,7 @@
 	var flyIt;
 	var wordList
 	var wordListPos = 90
-	var margin = { top: 10, right: 50, bottom: 60, left: 80 };
+	var margin = { top: 10, right: 200, bottom: 60, left: 80 };
 	var width = 1000;
 	var height = 600;
 	var textRoom = 400;
@@ -105,7 +105,7 @@
 	// var timeStep = 1 / 1000.0;
 	var timeStep = 1 / 10 / 60;
 
-	var xAxisLabelHeader = "Study Time (minutes)";
+	var xAxisLabelHeader = "Analysis Time (minutes)";
 	var yAxisLabelHeader = "Weighted user interaction sum";
 
 	var data;
@@ -581,12 +581,14 @@
 				}
 
 				// ------------------------- Read data, Create array of threads ------------------------
-
+				
 				makeDynamicArray(topic_pointer, original_data);
+				
+				drawIt()				
 
 				// ------------------------- Create Axes and etc at every redraw ------------------------
 				// -----------------------------Drawing lines for each class -----------------------------------
-				if (new_graph){
+
 					new_graph = false;
 
 					if (tags != null) {
@@ -594,29 +596,24 @@
 						tags.selectAll(".wordtag").remove();
 						tags.selectAll(".recttag").remove();
 					}  
-
+				
 					wordTags();
-
+					
 					drawIt(); 
-					drawLinks(classLinks); 
 					chartWidth =  new_chartWidth1;
 					chart.attr("width", new_chartWidth2);
 					updateWindow();  
 					
 					if (evaluation == 1) {thinkaloud();}
 					flag = 1;   // a flag to show "done with all drawings"
-					
-				}else{
-					updateInterest(); 
-					updateWindow();  
-				}
+
 			}
 		});
 	}
 
 	function wordTags(){
 
-
+		
 		if (source5 == "-UModel-"){
 		var new_jsonfile = "./data/NewIDs" + source5 + "/Dataset_" + array[0] + "/EntitiesList/" + array[1] + "_" + source2 + "_ClassNum" + source4 + ".json"; 
 		}else{
@@ -627,7 +624,7 @@
 		var count = 0;
 		var count1 = 0;
 		var each_seg = []
-
+		
 
 		for (var kk=0; kk< source4 ;kk++){    				// source4 is Class number
 				oldTagPos = chartWidth/2 - source4*50;
@@ -640,7 +637,7 @@
 		}
 
 		d3.json(new_jsonfile, function(error, new_json){
-
+			
 			// Need to reformat the data
 			// Making an array of objects to store more data...
 			for (var i = 0; i < new_json.length; i++){
@@ -670,13 +667,15 @@
 			}
 
 
-
+				chart.selectAll(".wordLists").remove();
+				chart.selectAll(".tag").remove();
+				
 				wordtags = tags.selectAll("tag")
 					.data(new_json).enter().append("g").attr("class", "tag");
 
-				wordList = chart.selectAll(".wordList")
-					.data(new_json).enter().append("g").attr("class", "wordList");
-
+				wordList = chart.selectAll(".wordLists")
+					.data(new_json).enter().append("g").attr("class", "wordLists");		
+				
 				wordtags.append("rect")//.selectAll(".recttag-"+i+1)
 					.attr("class", function(d,i){return "recttag recttag-"+i;})
 					.attr("fill",  function(d,i){return color(topic_pointer[i]);}) //myLightColor[2*i+1];})   // color(i+1)   myColor[i] myLightColor[2 * (d.paintIt) -1 ]
@@ -751,87 +750,80 @@
 						}
 					}
 				})
-					.on("click", function(){
+				.on("click", function(){
 
 					var me = d3.select(this).attr('class').split("-")[1]
 					me = parseInt(me) + 1
 
-				chart.plotArea.selectAll(".class-"+me.toString()).moveToFront();
-				// Only move links to front if related to clicked class
-				chart.plotArea.selectAll(".links").filter(function(d){
-				if (d.source.classNum == me)
-						return this;
-				}).moveToFront();
+					chart.plotArea.selectAll(".class-"+me.toString()).moveToFront();
 
-				singling = Number(me) + 1;   
+					singling = Number(me) + 1;   
 
-			chart.selectAll(".list").remove();
-			
-			wordList.append("g")
-					.attr("class", "list") 
-					.each(function (d,i){
-						if (i == singling - 2){
-						for (var j = 0; j < 11; j++) {
-						if (d.keywords[j]==null)
-							continue;
-						d3.select(this).append("text")
-							.datum(function(){
-								var tempp = d.keywords[j] 
-								return tempp[0];
-							})
-							.text(function(){
-								var tempp = d.keywords[j] 
-								return tempp[0];
-							})
-							// .attr("fill", color(singling - 2))
-							.attr("fill", color(topic_pointer[singling - 2]))
-							// .attr("dy", j ? "2.0em" : 0)
-							.attr("dy", ()=> {
-								var yP = j ? (2.0*j + 2.0).toString()+"em" : "2.0em";
-								return yP;
-							})
-							.attr("x", 10)
-							.attr("text-anchor", "middle")
-							.attr("font-size", 22)
-							.attr("class", "tspan" + j)
-							.on("mouseover", (d2) => {
-								var chosenWords = wordtags.selectAll("text").filter((di)=>{
-									if (di.substring(0, 6) == d2.substring(0, 6)){
-										return true;
-									}
+					chart.selectAll(".list").remove();
+					
+					wordList.append("g")
+						.attr("class", "list") 
+						.each(function (d,i){
+							if (i == singling - 2){
+							for (var j = 0; j < 11; j++) {
+							if (d.keywords[j]==null)
+								continue;
+							d3.select(this).append("text")
+								.datum(function(){
+									var tempp = d.keywords[j] 
+									return tempp[0];
+								})
+								.text(function(){
+									var tempp = d.keywords[j] 
+									return tempp[0];
+								})
+								.attr("fill", color(topic_pointer[singling - 2]))
+								.attr("dy", ()=> {
+									var yP = j ? (2.0*j + 2.0).toString()+"em" : "2.0em";
+									return yP;
+								})
+								.attr("x", 120)
+								.attr("text-anchor", "middle")
+								.attr("font-size", 22)
+								.attr("class", "tspan" + j)
+								.on("mouseover", (d2) => {
+									var chosenWords = wordtags.selectAll("text").filter((di)=>{
+										if (di.substring(0, 6) == d2.substring(0, 6)){
+											return true;
+										}
+									});
+									chosenWords.attr("fill", "yellow").attr("font-style", "oblique").attr("font-size", 30);
+								})
+								.on("mouseout", (d2) => {
+									var chosenWords = wordtags.selectAll("text").filter((di)=>{
+										if (di.substring(0, 6) == d2.substring(0, 6)){
+											return true;
+										}
+									});
+									chosenWords.attr("fill", "black").attr("font-style", "normal").attr("font-size", 18);
 								});
-								chosenWords.attr("fill", "yellow").attr("font-style", "oblique").attr("font-size", 30);
-							})
-							.on("mouseout", (d2) => {
-								var chosenWords = wordtags.selectAll("text").filter((di)=>{
-									if (di.substring(0, 6) == d2.substring(0, 6)){
-										return true;
-									}
-								});
-								chosenWords.attr("fill", "black").attr("font-style", "normal").attr("font-size", 18);
-							});
-						}}})
-					.attr("transform", "translate( " + (chartWidth+25) + ", 20)");
+							}}})
+						.attr("transform", "translate( " + (chartWidth+25) + ", 20)");
 
-					justClicked = 1
-					for (var kk=0;kk<11;kk++){
-						tags.selectAll(".recttag-"+(kk-1).toString())
-							.attr("fill", "lightgrey") 
-							.attr("opacity","0.5")
-							.attr("stroke", "none");
-					}
-						tags.selectAll(".recttag-"+(singling-2).toString())
-							//.attr("fill", function(d,i){return myLightColor[2*(singling) -3];})
-							.attr("fill",  function(d,i){return color(topic_pointer[singling-2]);}) //myLightColor[2*i+1];})   // color(i+1)   myColor[i] myLightColor[2 * (d.paintIt) -1 ]
-							.attr("opacity", "0.6")
-							.attr("stroke", "none");
+						justClicked = 1
+						for (var kk=0;kk<11;kk++){
+							tags.selectAll(".recttag-"+(kk-1).toString())
+								.attr("fill", "lightgrey") 
+								.attr("opacity","0.5")
+								.attr("stroke", "none");
+						}
+							tags.selectAll(".recttag-"+(singling-2).toString())
+								//.attr("fill", function(d,i){return myLightColor[2*(singling) -3];})
+								.attr("fill",  function(d,i){return color(topic_pointer[singling-2]);}) //myLightColor[2*i+1];})   // color(i+1)   myColor[i] myLightColor[2 * (d.paintIt) -1 ]
+								.attr("opacity", "0.6")
+								.attr("stroke", "none");
 
-					timer = setTimeout(function(){
-					singling = Number(me) + 1;
-					drawBoxes(classInfo,me)
-					hoverSegLines(true, me,1);
-					clearTimeout(timer);
-				}, 1);
+						timer = setTimeout(function(){
+						singling = Number(me) + 1;
+						drawBoxes(classInfo,me)
+						hoverSegLines(true, me,1);
+						clearTimeout(timer);
+					}, 1);
 
 				})
 					.call(d3.drag()
@@ -1071,7 +1063,7 @@
 				}
 
 				dataXRange.min = 0; 
-				dataXRange.max = (data[data.length - 2].Time + 3000) * timeStep;  // (data[data.length - 1].Time - data[0].Time) * timeStep * 1.10;
+				dataXRange.max = (data[data.length - 2].Time + 1000) * timeStep;  // (data[data.length - 1].Time - data[0].Time) * timeStep * 1.10;
 
 				// -------------------------- Initializing classInfo array. -----------------------------
 				for (var i = 0; i < classIDList.length; i++){
@@ -1376,15 +1368,12 @@
 					
 					if (data_temp[i].ClassNum.length == null){
 						data_temp[i].ClassNum = [data_temp[i].ClassNum];
-						console.log("Does it really happen?!?")
 					}
 
 					if ( (data_temp[i].ClassNum[0] == 0)){   // eliminate any topic 0 interaction!
-						console.log("fixed1 ", data_temp[i].ClassNum[0], data_temp[i])
 						data_temp[i].ClassNum = [1]
 					}
 					if ( (data_temp[i].ClassNum[0] == 0) | (data_temp[i].ClassNum == null)){   // eliminate any topic 0 interaction!
-						console.log("fixed2 ", data_temp[i].ClassNum[0])
 						data_temp[i].ClassNum = [1]
 					}
 					data_temp[i].classID = [];
@@ -1940,7 +1929,9 @@
 		tags.attr("width", chart_x);
 		new_chartWidth1 = chartWidth;
 		new_chartWidth2 = chart_x;
-
+		
+		zoom.translateExtent([[0, -Infinity], [chartWidth, Infinity]])
+		
 		updateWidth();
 		
 	}
@@ -2041,8 +2032,8 @@
 			});
 
 		zoom = d3.zoom()
-					.scaleExtent([1 / 4, 8])
-					.translateExtent([[-width, 10*width], [2 * width, Infinity]])  //-Infinity
+					.scaleExtent([1, 10])
+					.translateExtent([[0, -Infinity], [width, Infinity]])
 					.on("zoom", zoomed);
 					
 		
@@ -2062,6 +2053,12 @@
 							.attr("stroke", "none");
 					}
 				}
+			})
+			.on("mousemove", function() {
+			var mousePos = d3.mouse(this);
+			chart.xMarker.attr("transform", "translate(" + (mousePos[0] - 7 - margin.left -2 ) + ", " + 0 + ")");
+			d3.selectAll(".timeLine").attr("transform", "translate(" + (mousePos[0] - margin.left - 2) + ", " + 0 + ")");
+			chart.xMarker.selectAll("text").text("Time: " + chart.xScale.invert(mousePos[0]).toFixed(2));
 			});
 			
 			chart.selectAll(".zoom_rect").moveToBack();
@@ -2173,12 +2170,10 @@
 					if (duration_ > 50) {
 						next_seg = [duration_/10,next_ref[1], count,next_ref[2]];
 					    next_ = 1;
-						console.log(next_seg)
 						next_duration_mean = duration_/10;
 					}
 					
 				}else if ( (this_seg[0] >= this_ref[0]) & (this_seg[0] < next_ref[0]) & (this_seg[1] > next_next_ref[0]) & ( (next_ref[0] - this_seg[0]) < duration_/2) ) {
-					console.log("Long long segment! ", this_ref[2])
 					duration_mean = duration_mean + duration_/10;
 				}else if ( (this_ref[2] == 1) & (this_seg[0] < this_ref[0]) ){
 					if (duration_ > 50) {
@@ -2308,7 +2303,6 @@
 					var temp2 = Math.abs( ( Math.abs(next_ref[0] - this_seg[0]) + Math.abs(next_ref[0] - this_seg[1]) ) /  duration_) 
 					if (duration_ > 50) {data.push([duration_, temp]);}
 				}else if ( (this_seg[0] >= this_ref[0]) & (this_seg[0] < next_ref[0]) & (this_seg[1] > next_next_ref[0]) ) {  
-					console.log("Long long segment! ", this_ref[2])
 					if (duration_ > 50) data.push([duration_, 0]);
 				}else if ( (this_ref[2] == 1) & (this_seg[0] < this_ref[0]) ){
 					var temp = Math.abs( ( Math.abs(this_ref[0] - this_seg[0]) - Math.abs(this_ref[0] - this_seg[1]) ) /  duration_)  
@@ -2793,7 +2787,6 @@
 									old_magicNumber_2 = temp;
 									magicNumber_2  = temp/2
 									flag = 0;
-									console.log("slider out: ------------------>", magicNumber_2)
 
 									makeDynamicArray(topic_pointer, original_data);
 
@@ -2803,7 +2796,7 @@
 									chart.attr("width", new_chartWidth2);
 									updateWidth();
 									flag = 1;
-									drawIt();
+									// drawIt();
 									}
 							clearTimeout(timer);
 						}, 100);
@@ -2877,7 +2870,8 @@
 			 });
 			}
 			// ----------------------------- Interaction pattern Icons -----------------------
-			if (doIt ==1) {drawIcons(makeData2,num);}
+			// if (doIt ==1) {drawIcons(makeData2,num);}
+			drawIcons(makeData2,num);
 		  }
 		}
 	  }
@@ -2897,9 +2891,7 @@
 		}else{
 			topic_pointer[underTopic] = underTopic;
 		}
-
-		console.log("Pointer: ", topic_pointer)
-			
+	
 		makeDynamicArray(topic_pointer,original_data);
 	
 		// Draw new threads  -----------
@@ -2908,69 +2900,6 @@
 		chartWidth =  new_chartWidth1;
 		chart.attr("width", new_chartWidth2);
 		updateWidth();
-
-	}
-
-
-	function drawLinks(dataIn){
-		var lines = chart.plotArea.selectAll(".links")
-			.data(dataIn)
-			.enter().append("line")
-			.attr("class", "links")
-			.attr("x1", function(d){ return chart.xScale((d.source.Time) * timeStep) }) 
-			.attr("x2", function(d){ return chart.xScale((d.target.Time) * timeStep) }) 
-			.attr("y1", function(d){
-				return  chart.yScale(d.source.yPos)
-			})
-			.attr("y2", function(d){ return  chart.yScale(d.target.yPos) })
-			.style("fill", "none")
-			.style("stroke-dasharray", ("3, 3"))
-			.style("stroke-width", 4)
-			.style("stroke", function(d){
-				d.color = color(d.source.classNum -1);
-				return color(d.source.classNum -1)
-			})
-			.style("fill", "none");
-	}
-
-	function addFlagCirc(mousePos, num){
-
-		chart.plotArea.selectAll(".class-"+num.toString()).append("circle")        // add the flag! why not icon
-			.datum({classNum: num, Note: textField.property("value")})
-			.style("fill", "none")
-			.attr("r", 6)
-			.attr("stroke", "red")
-			.attr("stroke-width", 3)
-			.attr("class", "flag")
-			.attr("cx", function(d){
-				d.yPos = chart.yScale.invert(mousePos[1]);
-				d.Time = chart.xScale.invert(mousePos[0]);
-				return mousePos[0];
-			})
-			.attr("cy", mousePos[1])
-			.on("click", function(d){
-				if (removingFlag){
-					this.remove();
-					div1.transition()
-							.duration(300)
-							.style("opacity", 0);
-					removingFlag = false;
-				}
-			})
-			.on("mouseover", function(d){
-				div1.transition()
-						.duration(200)
-						.style("opacity", tooltipOpacity);
-				div1.html("Time: " + (d.Time).toFixed(2) + "<br/>" + d.Note)
-						.style("left", (d3.event.pageX) + "px")
-						.style("top", (d3.event.pageY - 28) + "px");
-			})
-			.on("mouseout", function(d){
-					div1.transition()
-							.duration(500)
-							.style("opacity", 0);
-			});
-
 
 	}
 	
@@ -3168,7 +3097,7 @@
 
 		    var w = 20
 
-				line.append("g").selectAll(".pattIcon") 
+			line.append("g").selectAll(".pattIcon") 
 				.data(makeData2).enter().append('image')
 				.attr("class", "pattern_icon")
 				.each(function(d){  //
@@ -3207,6 +3136,7 @@
 								.duration(500)
 								.style("opacity", 0);
 				});
+		
 			}
 
 	}
@@ -3214,7 +3144,6 @@
 	function thinkaloud(){
 
 		if (source5 == "-UModel-"){
-		console.log(source5);
 		var new_jsonfile = "./data/NewIDs" + source5 + "/Dataset_" + array[0] + "/UserInteractions/" + array[1] + "_" + source2 + "_InteractionsLogs.json"; // .toString()
 		}else{
 		var new_jsonfile = "./data/NewIDs" + source5 + source6 + "/Dataset_" + array[0] + "/UserInteractions/" + array[1] + "_" + source2 + "_InteractionsLogs.json"; // .toString()
@@ -3385,8 +3314,8 @@
 		   d3.select(this).classed("active", false);
 		   d3.select(this).attr("stroke", "none")
 
-		if (func == 1) console.log("Merge it!  ----------> ", overTopic, "and ",  underTopic);
-		if (func == 2) console.log("Split it!  ----------> ", overTopic, "and ",  underTopic);
+		// if (func == 1) console.log("Merge it!  ----------> ", overTopic, "and ",  underTopic);
+		// if (func == 2) console.log("Split it!  ----------> ", overTopic, "and ",  underTopic);
 
 		if (func > 0){classUpdate(overTopic, underTopic,func);}  				  // Apply Merge/Splite!
 		func = 0;
@@ -3450,12 +3379,13 @@
 				// If mousing over for more than a second
 				num_ = d3.select(this).attr('class').split("-")[1]
 				num_2 = d3.select(this).attr('id').split("-")[1]
-				 console.log("ID", num_)
-				 console.log("Itag", num_2)
+				 // console.log("ID", num_)
+				 // console.log("Itag", num_2)
 				if (singling == 0){
 					hoverSegLines(1, num_,num_2);   // on mouse over: 1
 
 				chart.selectAll(".list").remove();
+				
 				wordList.append("g")
 					.attr("class", "list")   
 					.each(function (d,i){
@@ -3473,7 +3403,7 @@
 								var yP = j ? (2.0*j + 2.0).toString()+"em" : "2.0em";
 								return yP;
 							})
-							.attr("x", 10)
+							.attr("x", 120)
 							.attr("text-anchor", "middle")
 							.attr("font-size", 22)
 							.attr("class", "tspan" + j)
@@ -3540,7 +3470,8 @@
 							.attr("stroke", "none");
 
 				chart.selectAll(".list").remove();
-			wordList.append("g")
+
+				wordList.append("g")
 					.attr("class", "list")   
 					.each(function (d,i){
 						if (i == singling - 2){
@@ -3549,7 +3480,6 @@
 							continue;
 						d3.select(this).append("text")
 							.text(function(){
-								console.log("keyword! ")
 								var tempp = d.keywords[j] 
 								return tempp[0];
 							})
@@ -3607,7 +3537,6 @@
 		chart.selectAll(".tCurves").remove();
 		chart.selectAll(".links").remove();
 		chart.plotArea.selectAll(".dots").remove();
-		chart.plotArea.selectAll(".pattern_icon").remove();
 		chart.plotArea.selectAll(".pattern_icon").remove();
 		chart.plotArea.selectAll(".wordsBox").remove();  			 // Remove are markers in not checked --- not hide
 		chart.plotArea.selectAll(".words").remove();   				 // Remove are markers in not checked --- not hide
