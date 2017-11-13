@@ -686,8 +686,8 @@
 					.attr("stroke", "none")
 				    .attr("rx", 6)
 					.attr("ry", 6)
-					.attr("x", function(d,i){return (i*160);}) 
-					.attr("y", function(d,i){return (1);})
+					.attr("x", function(d,i){return (-0 + i*160);}) 
+					.attr("y", function(d,i){return 1;})
 					.attr("width",  function(d,i){return wordtags_width})
 					.attr("height",380)
 					.attr("transform", "translate( " + tagPos + ", 10)")  //+ margin.left + (width/2 - keywords_width/2 ) +
@@ -748,8 +748,6 @@
 						for (var kk=0;kk<11;kk++){
 						chart.plotArea.selectAll(".t-" + kk.toString())
 							.style("stroke",function(d){return d.color;})   // function(d){ return myColor[d.paintIt]})
-							// .style("opacity", 1.0);
-							// .style("stroke-width", pathStroke);
 						}
 					}
 				})
@@ -757,6 +755,8 @@
 
 					var me = d3.select(this).attr('class').split("-")[1]
 					me = parseInt(me) + 1
+
+					d3.selectAll(".wordtag-"+(me-1).toString()).moveToFront();
 
 					chart.plotArea.selectAll(".class-"+me.toString()).moveToFront();
 
@@ -795,7 +795,7 @@
 											return true;
 										}
 									});
-									chosenWords.attr("fill", "yellow").attr("font-style", "oblique").attr("font-size", 30);
+									chosenWords.attr("fill", "yellow"); //.attr("font-style", "oblique").attr("font-size", 30);
 								})
 								.on("mouseout", (d2) => {
 									var chosenWords = wordtags.selectAll("text").filter((di)=>{
@@ -803,7 +803,7 @@
 											return true;
 										}
 									});
-									chosenWords.attr("fill", "black").attr("font-style", "normal").attr("font-size", 18);
+									chosenWords.attr("fill", "black"); // .attr("font-style", "normal").attr("font-size", 18);
 								});
 							}}})
 						.attr("transform", "translate( " + (chartWidth+25) + ", 20)");
@@ -867,7 +867,7 @@
 										return true;
 									}
 								});
-								chosenWords.attr("fill", "yellow").attr("font-style", "oblique").attr("font-size", 20);
+								chosenWords.attr("fill", "yellow"); // .attr("font-style", "oblique").attr("font-size", 20);
 							})
 							.on("mouseout", (d2) => {
 								var chosenWords = wordtags.selectAll("text").filter((di)=>{
@@ -875,7 +875,7 @@
 										return true;
 									}
 								});
-								chosenWords.attr("fill", "black").attr("font-style", "normal").attr("font-size", 18);
+								chosenWords.attr("fill", "black"); // .attr("font-style", "normal").attr("font-size", 18);
 								wordtags.selectAll(".tspan2").attr("fill", "none")
 							});
 					}
@@ -897,7 +897,7 @@
 								var yP = 10 ? (1.8*10 + 1.8).toString()+"em" : "1.8em";
 								return yP;
 							})
-							.attr("x", i * 110 + 50)
+							.attr("x", i * 160 + 75)
 							.attr("text-anchor", "middle")
 							.attr("font-size", 18)
 							.attr("class", "tspan2")
@@ -907,7 +907,7 @@
 										return true;
 									}
 								});
-								chosenWords.attr("fill", "yellow").attr("font-style", "oblique").attr("font-size", 20);
+								chosenWords.attr("fill", "yellow");//.attr("font-style", "oblique").attr("font-size", 20);
 							})
 							.on("mouseout", (d2) => {
 								var chosenWords = wordtags.selectAll("text").filter((di)=>{
@@ -915,7 +915,7 @@
 										return true;
 									}
 								});
-								chosenWords.attr("fill", "none").attr("font-style", "normal").attr("font-size", 18);
+								chosenWords.attr("fill", "none");//.attr("font-style", "normal").attr("font-size", 18);
 							});
 					}
 					})
@@ -1985,7 +1985,7 @@
 				
 			chart.plotArea.selectAll(".pattern_icon") 
 					.attr("x", function(d){
-					 return xz(d.target.x) - 20/2;   // icon svg size
+					 return xz(d.target.x) - 30;   // icon svg size
 					})
 					.attr("opacity", function(d){
 						if ((xz(d.target.x)) == 0){
@@ -2381,8 +2381,8 @@
 	function makeWordTags(){
 
 		tags = d3.select("#WordListsDiv").append("svg")
-			.attr("width", width + textRoom) 
-			.attr("height",keywords_Height) 
+			.attr("width", width - margin.left)   // + textRoom
+			.attr("height",keywords_Height + 50) 
 			.attr("transform", "translate( " + margin.left + ", 0)")
 			.on("click", function(d){   // Cancel singling
 
@@ -2477,7 +2477,7 @@
 			});
 			// ------------------------------------- Keywords and boxes ---------------------------------------
 			
-			tagPos = chartWidth/2 - source4*50;
+			tagPos = chartWidth/2 - source4*75;
 
 			for (var count_all = 0; count_all < source4; count_all++){   
 			    boundingBox[count_all] = (tagPos + count_all*110);
@@ -2555,12 +2555,13 @@
 			});
 		chart.plotArea.selectAll(".pattern_icon")
 			.attr("x", function(d){
-				return chart.xScale(d.target.x) - 20/2;   // icon svg size
+				return chart.xScale(d.target.x) - 30;   // icon svg size
 			});
 
 		chart.plotArea.selectAll(".pattern_icon")
 			 .attr("y", function(d, i){
-				return chart.yScale(d.target.y);
+			 	y_pos = ( chart.yScale(d.target.y) + chart.yScale(d.source.y) )/2 - 30
+				return y_pos;
 			  });
 
 		chart.plotArea.selectAll(".talks")
@@ -2932,7 +2933,8 @@
 			 chart.plotArea.selectAll(".pattern_icon")
 			 .attr("y", function(d, i){
 			 if (d.isSel == 1){
-				return chart.yScale(d.target.y);}
+			 	y_pos = ( chart.yScale(d.target.y) + chart.yScale(d.source.y) )/2 - 30
+				return y_pos;}
 			 });
 			}
 			// ----------------------------- Interaction pattern Icons -----------------------
@@ -3107,7 +3109,7 @@
 		}
 
 		xz = d3.event.transform.rescaleX(xScale_zoom);
-		
+
 		var boxes = chart.plotArea.append("g").attr("class", "hover_boxes")
 			.selectAll("rect")
 			.enter().append("g").attr("class", "testboxes")
@@ -3168,8 +3170,8 @@
 			line.append("g").selectAll(".pattIcon") 
 				.data(makeData2).enter().append('image')
 				.attr("class", "pattern_icon")
-				.each(function(d){
-						if ( (d.source.y > d.target.y) & ( (highlightInteract == d.InteractionType) || (noteInteract == d.InteractionType) ||  (searchInteract == d.InteractionType) || (ceartNoteInteract == d.InteractionType) || (openDocInteract == d.InteractionType) ) ) {
+				.each(function(d){  //  (d.source.y > d.target.y) & 
+						if (( (highlightInteract == d.InteractionType) || (noteInteract == d.InteractionType) ||  (searchInteract == d.InteractionType) || (ceartNoteInteract == d.InteractionType) || (openDocInteract == d.InteractionType) ) ) {
 							d.isSel = true;
 							// console.log("+++++++++++++", d.InteractionType)
 						} else if (d.InteractionType.split("")[0] == "f") {
@@ -3203,7 +3205,7 @@
 					if (target_ < 0) {
 						target_ = 0;
 					}
-				
+
 				return ( (chart.yScale(target_) + chart.yScale(source_))/2 - 15 -15);})
 				.attr("opacity", function(d){
 					if ((chart.xScale(d.target.x) - 15 -15) == 0){
@@ -3307,7 +3309,6 @@
 	function box_dragged(d) {
 
 		var selectBox = parseInt(d3.select(this).attr('class').split("-")[1]);
-
 
 		newBoxPosX = prevBoxPosX[selectBox] + (d3.event.x) -  prevMousePosX;
 		newBoxPosY =  prevBoxPosY[selectBox] + (d3.event.y) - prevMousePosY;
@@ -3511,7 +3512,7 @@
 										return true;
 									}
 								});
-								chosenWords.attr("fill", "yellow").attr("font-style", "oblique").attr("font-size", 30);
+								chosenWords.attr("fill", "yellow");//.attr("font-style", "oblique").attr("font-size", 30);
 							})
 							.on("mouseout", (d2) => {
 								var chosenWords = wordtags.selectAll("text").filter((di)=>{
@@ -3519,7 +3520,7 @@
 										return true;
 									}
 								});
-								chosenWords.attr("fill", "black").attr("font-style", "normal").attr("font-size", 18);
+								chosenWords.attr("fill", "black");//.attr("font-style", "normal").attr("font-size", 18);
 							});
 						}}})
 				.attr("transform", "translate( " + (chartWidth+25) + ", 70)");
@@ -3596,7 +3597,7 @@
 										return true;
 									}
 								});
-								chosenWords.attr("fill", "yellow").attr("font-style", "oblique").attr("font-size", 30);
+								chosenWords.attr("fill", "yellow");//.attr("font-style", "oblique").attr("font-size", 30);
 							})
 							.on("mouseout", (d2) => {
 								var chosenWords = wordtags.selectAll("text").filter((di)=>{
@@ -3604,7 +3605,7 @@
 										return true;
 									}
 								});
-								chosenWords.attr("fill", "black").attr("font-style", "normal").attr("font-size", 18);
+								chosenWords.attr("fill", "black");//.attr("font-style", "normal").attr("font-size", 18);
 							});
 						}}})
 				.attr("transform", "translate( " + (chartWidth+25) + ", 70)");
