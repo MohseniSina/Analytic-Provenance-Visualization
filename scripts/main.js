@@ -134,7 +134,7 @@
 	 var highlightInteract = "HighlightTxt"
 	 var searchInteract = "search"
 	 var ceartNoteInteract = ""
-     var openDocInteract= ""
+     var openDocInteract = ""
 
 	var timer;
 
@@ -666,7 +666,7 @@
 				new_json[i].keywords = tempTen.concat(new_json[i].keywords.slice(9, 30));				
 			}
 
-
+				wordtags_width = 150;
 				chart.selectAll(".wordLists").remove();
 				chart.selectAll(".tag").remove();
 				
@@ -683,9 +683,9 @@
 					.attr("stroke", "none")
 				    .attr("rx", 6)
 					.attr("ry", 6)
-					.attr("x", function(d,i){return (i*110);}) 
+					.attr("x", function(d,i){return (i*160);}) 
 					.attr("y", function(d,i){return (1);})
-					.attr("width",  function(d,i){return 100})
+					.attr("width",  function(d,i){return wordtags_width})
 					.attr("height",380)
 					.attr("transform", "translate( " + tagPos + ", 10)")  //+ margin.left + (width/2 - keywords_width/2 ) +
 					.on("mouseover", function(){
@@ -704,10 +704,10 @@
 
 			chart.plotArea.selectAll(".tCurves")
 				.style("stroke", "lightgrey")
-				.style("opacity", 1);
+				// .style("opacity", 1);
 			chart.plotArea.selectAll(".t-" + me.toString())
 				.style("stroke",function(d){return d.color;})   // function(d){ return myColor[d.paintIt]})
-				.style("opacity", 1.0);
+				// .style("opacity", 1.0);
 				// .style("stroke-width", thickPathStroke);
 				chart.plotArea.selectAll(".class-"+me.toString()).moveToFront();
 					}
@@ -717,7 +717,7 @@
 						for (var kk=0;kk<11;kk++){
 						chart.plotArea.selectAll(".t-" + kk.toString())
 							.style("stroke",function(d){return d.color;})   // function(d){ return myColor[d.paintIt]})
-							.style("opacity", 1.0);
+							// .style("opacity", 1.0);
 							// .style("stroke-width", pathStroke);
 						}
 					}
@@ -730,11 +730,11 @@
 
 			chart.plotArea.selectAll(".tCurves")
 				.style("stroke", "lightgrey")
-				.style("opacity", 1);
+				// .style("opacity", 1);
 
 			chart.plotArea.selectAll(".t-" + me.toString())
 				.style("stroke",function(d){return d.color;})   // function(d){ return myColor[d.paintIt]})
-				.style("opacity", 1.0);
+				// .style("opacity", 1.0);
 				// .style("stroke-width", thickPathStroke);
 
 				chart.plotArea.selectAll(".class-"+me.toString()).moveToFront();
@@ -745,7 +745,7 @@
 						for (var kk=0;kk<11;kk++){
 						chart.plotArea.selectAll(".t-" + kk.toString())
 							.style("stroke",function(d){return d.color;})   // function(d){ return myColor[d.paintIt]})
-							.style("opacity", 1.0);
+							// .style("opacity", 1.0);
 							// .style("stroke-width", pathStroke);
 						}
 					}
@@ -853,7 +853,8 @@
 								var yP = j ? (1.8*j + 1.8).toString()+"em" : "1.8em";
 								return yP;
 							})
-							.attr("x", i * 110 + 50)
+							
+							.attr("x", i * 160 + 75)
 							.attr("text-anchor", "middle")
 							.attr("font-size", 18)
 							.attr("class", "tspan-" + j)
@@ -924,11 +925,11 @@
 
 			chart.plotArea.selectAll(".tCurves")
 				.style("stroke", "lightgrey")
-				.style("opacity", 1);
+				// .style("opacity", 1);
 
 			chart.plotArea.selectAll(".t-" + me.toString())
 				.style("stroke",function(d){return d.color;})   // function(d){ return myColor[d.paintIt]})
-				.style("opacity", 1.0);
+				// .style("opacity", 1.0);
 
 				chart.plotArea.selectAll(".class-"+me.toString()).moveToFront();
 					}
@@ -938,7 +939,7 @@
 						for (var kk=0;kk<11;kk++){
 						chart.plotArea.selectAll(".t-" + kk.toString())
 							.style("stroke",function(d){return d.color;})   // function(d){ return myColor[d.paintIt]})
-							.style("opacity", 1.0);
+							// .style("opacity", 1.0);
 							// .style("stroke-width", pathStroke);
 						}
 					}
@@ -1965,11 +1966,32 @@
 				+ " " + xTarget + "," + yTarget;
 				}
 			})
+			.attr("opacity", function(d){
+						
+						if ((xz(d.source.x)) == 0){
+							// console.log(xz(d.source.x))
+							return 0;
+						}else if ((xz(d.target.x)) == 2056){
+							return 0;
+						}else{
+							return 1;
+						}
+					});
 				
 			chart.plotArea.selectAll(".pattern_icon") 
 					.attr("x", function(d){
 					 return xz(d.target.x) - 20/2;   // icon svg size
-			});
+					})
+					.attr("opacity", function(d){
+						if ((xz(d.target.x)) == 0){
+							return 0;
+						}else if ( xz(d.target.x) == 2056){
+							return 0;
+						}else{
+							// console.log(xz(d.target.x))
+							return 1;
+						}
+					});
 
 	}
 				
@@ -2493,6 +2515,17 @@
 					}else{
 						return pathStroke; 				
 					}		
+			})
+			.attr("opacity", function(d){
+			
+			if ((chart.xScale(d.source.x)) == 0){
+				// console.log(xz(d.source.x))
+				return 0;
+			}else if ((chart.xScale(d.target.x)) == 2056){
+				return 0;
+			}else{
+				return 1;
+			}
 			});
 		
 		chart.plotArea.selectAll(".words")
@@ -2507,6 +2540,11 @@
 			.attr("x", function(d){
 				return chart.xScale(d.target.x) - 20/2;   // icon svg size
 			});
+
+		chart.plotArea.selectAll(".pattern_icon")
+			 .attr("y", function(d, i){
+				return chart.yScale(d.target.y);
+			  });
 
 		chart.plotArea.selectAll(".talks")
 			.attr("x", function(d){
@@ -2860,6 +2898,17 @@
 				+ " " + xTarget + "," + yTarget;
 				}
 			})
+			.attr("opacity", function(d){
+			
+			if ((chart.xScale(d.source.x)) == 0){
+				// console.log(xz(d.source.x))
+				return 0;
+			}else if ((chart.xScale(d.target.x)) == 2056){
+				return 0;
+			}else{
+				return 1;
+			}
+			});
 
 	
 			if (doIt == 0){
@@ -2923,10 +2972,10 @@
 
 			chart.plotArea.selectAll(".tCurves")
 				.style("stroke", "lightgrey")
-				.style("opacity", 1);
+				// .style("opacity", 1);
 			chart.plotArea.selectAll(".t-" + num.toString())
 				.style("stroke",function(d){return d.color;})  
-				.style("opacity", 1.0);
+				// .style("opacity", 1.0);
 				
 			chart.plotArea.selectAll(".links")
 				.style("stroke", "lightgrey");
@@ -2934,17 +2983,17 @@
 		} else if (hovering == 2) { 		//--------------- on mouse out & cancel singling:
 			chart.plotArea.selectAll(".tCurves")
 				.style("stroke", function(d){return d.color;})
-				.style("opacity", 1);
+				// .style("opacity", 1);
 			chart.plotArea.selectAll(".links")
 				.style("stroke", function(d){return d.color;});
 		} else if (hovering == 3) {         //--------------- on box over: 3
 			chart.plotArea.selectAll(".t-" + num.toString()).filter("path#tag-" + num_2.toString()) //
 				.style("stroke",function(d){return "red";}) 
-				.style("opacity", 1.0);
+				// .style("opacity", 1.0);
 		} else if (hovering == 4) {         //--------------- on box out: 4
 			chart.plotArea.selectAll(".t-" + num.toString()).filter("path#tag-" + num_2.toString()) //
 				.style("stroke",function(d){return d.color;})  
-				.style("opacity", 1.0);
+				// .style("opacity", 1.0);
 		}
 	}
 
@@ -3101,7 +3150,7 @@
 				.data(makeData2).enter().append('image')
 				.attr("class", "pattern_icon")
 				.each(function(d){  //
-						if ((connectionInteract == d.InteractionType) || ( (d.source.y > d.target.y) & (highlightInteract == d.InteractionType || noteInteract == d.InteractionType ||  searchInteract == d.InteractionType || ceartNoteInteract == d.InteractionType || openDocInteract == d.InteractionType) ) ) {// (d.target.y > d.source.y) & (highlightInteract == d.InteractionType || noteInteract == d.InteractionType ||  searchInteract == d.InteractionType || ceartNoteInteract == d.InteractionType || openDocInteract == d.InteractionType) ) ) {
+						if ( (d.source.y > d.target.y) & (highlightInteract == d.InteractionType || noteInteract == d.InteractionType ||  searchInteract == d.InteractionType || ceartNoteInteract == d.InteractionType || openDocInteract == d.InteractionType) ) {// (d.target.y > d.source.y) & (highlightInteract == d.InteractionType || noteInteract == d.InteractionType ||  searchInteract == d.InteractionType || ceartNoteInteract == d.InteractionType || openDocInteract == d.InteractionType) ) ) {
 							d.isSel = true;
 						} else {
 							d.isSel = false;
@@ -3125,6 +3174,13 @@
 					}
 				
 				return ( (chart.yScale(target_) + chart.yScale(source_))/2 - 15 -15);})
+				.attr("opacity", function(d){
+					if ((chart.xScale(d.target.x) - 15 -15) == 0){
+						return 0;
+					}else{
+						return 1;
+					}
+				})
 				.on("mouseover", function(d){
 					div1.transition()
 							.duration(200)
@@ -3374,6 +3430,17 @@
 					}else{
 						return pathStroke; 				
 					}		
+			})
+			.attr("opacity", function(d){
+			
+			if ((chart.xScale(d.source.x)) == 0){
+				// console.log(xz(d.source.x))
+				return 0;
+			}else if ((chart.xScale(d.target.x)) == 2056){
+				return 0;
+			}else{
+				return 1;
+			}
 			})
 			.on("mouseover", function(d,j) {
 				// If mousing over for more than a second
