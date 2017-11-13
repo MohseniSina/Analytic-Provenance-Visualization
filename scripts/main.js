@@ -45,13 +45,14 @@
 
 	var textField;
 	var singling = 0;
-	var axisFont = 15;
+	var axisFont = 25;
 	var topicFont = 12;
     var thickPathStroke = 8;
 	var moreThickPathStroke	= 8;
     var pathStroke = 6;
 	var tooltipOpacity = 1;
 	var curvethread = 1;
+	var time_cover = 0
 
 	var addingFlag = false;
 	var removingFlag = false;
@@ -140,6 +141,8 @@
 
 	var toggleReadInteract;
 
+	var xz;
+	var zoom_level = 1; 
 	// ----------------------------------- Define the div for the tooltip -----------------------------
 	var div1 = d3.select("body").append("talkbubble")   // Tooltip u explorations
 		.attr("class", "tooltip")
@@ -784,7 +787,7 @@
 								})
 								.attr("x", 120)
 								.attr("text-anchor", "middle")
-								.attr("font-size", 22)
+								.attr("font-size", topicFont)
 								.attr("class", "tspan" + j)
 								.on("mouseover", (d2) => {
 									var chosenWords = wordtags.selectAll("text").filter((di)=>{
@@ -1938,9 +1941,11 @@
 	}
 	
 	function zoomed() {
-		  var xz = d3.event.transform.rescaleX(xScale_zoom);
+		  xz = d3.event.transform.rescaleX(xScale_zoom);
 		  xGroup.call(chart.xAxis.scale(xz));
-		 
+		  // console.log(d3.event.transform.x / d3.event.transform.k)
+		  time_cover = d3.event.transform.x / d3.event.transform.k
+		  zoom_level = d3.event.transform.k
 		chart.plotArea.selectAll(".tCurves")
 			.attr("d", function link(d) {
 				var ySource = chart.yScale(d.source.y);
@@ -1967,11 +1972,11 @@
 				}
 			})
 			.attr("opacity", function(d){
-						
+						// console.log(xz(d.target.x), xz(2056))
 						if ((xz(d.source.x)) == 0){
-							// console.log(xz(d.source.x))
+							// if (chart.yScale(d.target.y) > 0) { time_cover = d.Time;}
 							return 0;
-						}else if ((xz(d.target.x)) == 2056){
+						}else if ((xz(d.target.x)) == xz(2056)){
 							return 0;
 						}else{
 							return 1;
@@ -1985,13 +1990,19 @@
 					.attr("opacity", function(d){
 						if ((xz(d.target.x)) == 0){
 							return 0;
-						}else if ( xz(d.target.x) == 2056){
+						}else if ( xz(d.target.x) == xz(2056)){
 							return 0;
 						}else{
 							// console.log(xz(d.target.x))
 							return 1;
 						}
 					});
+
+					
+			// chart.plotArea.selectAll(".hover_boxes") 
+			// 		.attr("x", function(d){
+			// 		 return xz(d.source.x);   // icon svg size
+			// })
 
 	}
 				
@@ -2009,14 +2020,15 @@
 			var mousePos = d3.mouse(this);
 			chart.xMarker.attr("transform", "translate(" + (mousePos[0] - 7) + ", " + 0 + ")");
 			d3.selectAll(".timeLine").attr("transform", "translate(" + (mousePos[0]) + ", " + 0 + ")");
-			chart.xMarker.selectAll("text").text("Time: " + chart.xScale.invert(mousePos[0]).toFixed(2));
+			chart.xMarker.selectAll("text").text("Time: " + (chart.xScale.invert(mousePos[0]) + chart.xScale.invert(-time_cover) ).toFixed(2));
 			});
 			
 			chart.plotArea.on("mousemove", function() {
 			justClicked = 0
-
+			// d3.event.transform.k
 			var mousePos = d3.mouse(this);
-			var time1 = chart.xScale.invert(mousePos[0])
+			// console.log(time_cover, chart.xScale.invert(-time_cover))
+			var time1 = chart.xScale.invert(mousePos[0])/zoom_level + chart.xScale.invert(-time_cover);
 			chart.xMarker.attr("transform", "translate(" + (mousePos[0] - 7) + ", " + 0 + ")");
 			d3.selectAll(".timeLine").attr("transform", "translate(" + (mousePos[0] ) + ", " + 0 + ")");
 			if (60*(time1 - Math.floor(time1)) > 9) {
@@ -2080,7 +2092,12 @@
 			var mousePos = d3.mouse(this);
 			chart.xMarker.attr("transform", "translate(" + (mousePos[0] - 7 - margin.left -2 ) + ", " + 0 + ")");
 			d3.selectAll(".timeLine").attr("transform", "translate(" + (mousePos[0] - margin.left - 2) + ", " + 0 + ")");
-			chart.xMarker.selectAll("text").text("Time: " + chart.xScale.invert(mousePos[0]).toFixed(2));
+			
+			// var xxz = d3.event.transform.rescaleX(xScale_zoom);
+			// console.log((mousePos[0]),xxz((mousePos[0])))
+			//zoom_level = d3.event.transform
+			//console.log((chart.xScale.invert(mousePos[0]), d3.event.transform, time_cover / 600))
+			chart.xMarker.selectAll("text").text("Time: " + ( chart.xScale.invert(mousePos[0])/zoom_level + chart.xScale.invert(-time_cover)).toFixed(2) );
 			});
 			
 			chart.selectAll(".zoom_rect").moveToBack();
@@ -2415,7 +2432,7 @@
 			.call(chart.xAxis);
 
 		chart.xLabel
-			.attr("transform", "translate(" + (margin.left + chartWidth / 2.0) + ", " + (chartHeight + margin.top + margin.bottom - axisFont / 2 - 10) + ")");
+			.attr("transform", "translate(" + (margin.left + chartWidth / 2.0) + ", " + (chartHeight + margin.top + margin.bottom - axisFont / 2 ) + ")");
 
 		chart.selectAll(".zoom_rect")
 		.attr("width", chartWidth + textRoom );
@@ -2429,8 +2446,8 @@
 		
 		chart.yAxis.scale(chart.yScale);
 
-		chart.yAxisContainer
-			.call(chart.yAxis);
+		// chart.yAxisContainer
+		// 	.call(chart.yAxis);
 
 		chart.plotArea.selectAll(".links")
 			.attr("x1", function(d){ return chart.xScale((d.source.Time) * timeStep) }) 
@@ -2629,7 +2646,7 @@
 			.attr("text-anchor", "middle")
 			.attr("text-align", "center")
 			.attr("transform", "translate(" + 0 + ", " + 30 + ")")
-			.style("font-size", "12px")
+			.style("font-size", "15px")
 			.text("Time: 0 min");
 
 		d3.xml("./styles/timer.svg").mimeType("image/svg+xml").get(function(error, xml) {
@@ -2665,19 +2682,19 @@
 
 		chart.yAxis = d3.axisLeft(chart.yScale);
 
-		chart.yAxisContainer = chart.append("g")
-			.attr("class", "y axis scatter-yaxis")
-			.attr("transform", "translate(" + margin.left + ", " + margin.top + ")")
-			.call(chart.yAxis);
+		// chart.yAxisContainer = chart.append("g")
+		// 	.attr("class", "y axis scatter-yaxis")
+		// 	.attr("transform", "translate(" + margin.left + ", " + margin.top + ")")
+		// 	.call(chart.yAxis);
 
 		// y axis header label
-		chart.yLabel = chart.append('text')
-			.style("font-size", axisFont + "px")
-			.attr("class", "heatmap-yaxis")
-			.attr("text-anchor", "middle")
-			.attr("font-weight", "bold")
-			.attr("transform", "translate(" + (axisFont+ 25) + ", " + (chartHeight / 2.0) + ") rotate(-90)")
-			.text(yAxisLabelHeader);
+		// chart.yLabel = chart.append('text')
+		// 	.style("font-size", axisFont + "px")
+		// 	.attr("class", "heatmap-yaxis")
+		// 	.attr("text-anchor", "middle")
+		// 	.attr("font-weight", "bold")
+		// 	.attr("transform", "translate(" + (axisFont+ 15) + ", " + (chartHeight / 2.0) + ") rotate(-90)")
+		// 	.text(yAxisLabelHeader);
 	}
 
 
@@ -3089,7 +3106,8 @@
 			}
 		}
 
-
+		xz = d3.event.transform.rescaleX(xScale_zoom);
+		
 		var boxes = chart.plotArea.append("g").attr("class", "hover_boxes")
 			.selectAll("rect")
 			.enter().append("g").attr("class", "testboxes")
@@ -3098,6 +3116,7 @@
 			.attr("id", function(d,i){ return 'tag-'+ i }) // assign ID // This "id" is the segment number
 			.style("fill", "none")
 			.attr("height", function(d,i){
+			  
 				var this_height;
 				var yTarget = chart.yScale(d.source.y);
 				var ySource = chart.yScale(d.target.y);
@@ -3149,16 +3168,28 @@
 			line.append("g").selectAll(".pattIcon") 
 				.data(makeData2).enter().append('image')
 				.attr("class", "pattern_icon")
-				.each(function(d){  //
-						if ( (d.source.y > d.target.y) & (highlightInteract == d.InteractionType || noteInteract == d.InteractionType ||  searchInteract == d.InteractionType || ceartNoteInteract == d.InteractionType || openDocInteract == d.InteractionType) ) {// (d.target.y > d.source.y) & (highlightInteract == d.InteractionType || noteInteract == d.InteractionType ||  searchInteract == d.InteractionType || ceartNoteInteract == d.InteractionType || openDocInteract == d.InteractionType) ) ) {
+				.each(function(d){
+						if ( (d.source.y > d.target.y) & ( (highlightInteract == d.InteractionType) || (noteInteract == d.InteractionType) ||  (searchInteract == d.InteractionType) || (ceartNoteInteract == d.InteractionType) || (openDocInteract == d.InteractionType) ) ) {
 							d.isSel = true;
+							// console.log("+++++++++++++", d.InteractionType)
+						} else if (d.InteractionType.split("")[0] == "f") {
+							// console.log("+++++++++", d.InteractionType)
+							d.isSel = false;
+							d3.select(this).remove();
 						} else {
+							// console.log("---------", d.InteractionType)
 							d.isSel = false;
 							d3.select(this).remove();
 						}
 
 				})
-				.attr('xlink:href',function(d){return "./styles/"+ d.InteractionType + ".svg";}) 
+				.attr('xlink:href',function(d){
+					svgfile = d.InteractionType
+					if (svgfile.split("")[0] == "f") {
+						svgfile = ""
+					}
+					return "./styles/"+ svgfile + ".svg";}
+					) 
 				.attr('height', '30')
 				.attr('width', '30')
 				.attr("x", function(d){return chart.xScale(d.target.x) - 15 -15;}) 
