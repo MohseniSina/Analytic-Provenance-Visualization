@@ -97,30 +97,58 @@ div.absolute {
 
 	<br />
 	<br />
+
+	<p3> &nbsp; Number of Features: </p3>
+	<select id="featureNum" name="featureNum">
+		<option value ="3">3</option>
+		<option value ="4">4</option>
+		<option value ="5">5</option>
+		<option value ="6" selected>6</option>
+		<option value ="7">7</option>
+		<option value ="8">8</option>
+		<option value ="9">9</option>
+		<option value ="10" >10</option>
+		<option value ="11" >11</option>
+		<option value ="12" >12</option>
+		<option value ="13" >13</option>
+		<option value ="14" >14</option>
+		<option value ="15" >15</option>
+		<option value ="16" >16</option>
+		<option value ="17" >17</option>
+		<option value ="18" >18</option>
+		<option value ="19" >19</option>
+		<option value ="20" >20</option>
+		<option value ="21" >21</option>
+		<option value ="22" >22</option>
+		<option value ="23" >23</option>
+		<option value ="24" >24</option>
+		<option value ="25" >25</option>
+	</select>​
+
 	<br />
 	<br />
 
 	<p2>  &nbsp; Threads Type: </p2>
 	<select id="thread_type" name="thread_type">
 		<option value ="topicThread" >Topic Threads</option>
-		<option value ="topicInterest">Topic Interests</option>
-		<option value ="analysistask" selected>Segmented Tasks</option>
-		<option value ="analysistask2">Segmented Tasks 2</option>
+		<!-- <option value ="topicInterest">Topic Interests</option> -->
+		<option value ="analysistask" selected>Provenance Segmentation</option>
+		<option value ="analysistask2">Provenance Segmentation 2</option>
 	</select>​
 
 	<br />
 	<br />
-	<p3>  &nbsp; Topics Modeling: </p3>
+	<p3>  &nbsp; Active Learning: </p3>
 	<select id="T_Method" name="T_Method">
-		<option value ="-80-30-">80-30</option>
-		<option value ="-20-10-" >20-10</option>
-		<option value ="-10-5-" >10-5</option>
-		<option value ="-UModel-" selected>U/Model</option>
+		<option value ="80">80</option>
+		<option value ="20" >20</option>
+		<option value ="1" >1</option>
+		<option value ="0" selected>0</option>
 	</select>​
 
-	<select id="E_Method" name="E_Method">
-		- <option value ="NTF"selected>W/Count</option>
-	</select>​
+	<!-- <select id="E_Method" name="E_Method">
+		<option value ="NTF"selected>W/Count</option>
+	</select>​ -->
 
 	<br />
 	<br />  &nbsp; Control Pannel:
@@ -180,9 +208,9 @@ div.absolute {
 	</form>
 
 	</br>
-	</br>
+	<!-- </br>
 		<div id="Slider1Div"></div>
-	</br>
+	</br> -->
 	</br>
 		<div id="Slider2Div"></div>
 

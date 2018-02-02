@@ -24,7 +24,7 @@
 	var width = 1000;
 	var height = 600;
 	var textRoom = 400;
-	var keywords_Height = 300;
+	var keywords_Height = 400;
 	var keywords_width = 2000;
     var magicNumber = 1;
 	var magicNumber_2 = 1;
@@ -45,16 +45,14 @@
 
 	var textField;
 	var singling = 0;
-	var axisFont = 23;
-	var topicFont = 10;
+	var axisFont = 25;
+	var topicFont = 12;
     var thickPathStroke = 8;
 	var moreThickPathStroke	= 8;
     var pathStroke = 6;
 	var tooltipOpacity = 1;
 	var curvethread = 1;
 	var time_cover = 0
-	var wordtags_width = 150;
-	var wordtags_height = 300;
 
 	var addingFlag = false;
 	var removingFlag = false;
@@ -194,8 +192,7 @@
 	var dropdown_3 = d3.select("#thread_type")    	 // Drop down for thread type
 	var dropdown_4 = d3.select("#classNum") 		 // Drop down for number of classes
 	var dropdown_5 = d3.select("#T_Method")
-	var dropdown_6 = d3.select("#featureNum")
-
+	var dropdown_6 = d3.select("#E_Method")
 
 	//add combobox to select-data
 	var scaleType = ["linear", "Cartesian Distortion Filter", "Fisheye Filter"];
@@ -215,7 +212,7 @@
 
 	dropdown_1.on("change", function(){topic_pointer = [0,1,2,3,4,5,6,7,8,9,10]; init(true);});   // Dataset name
 	dropdown_2.on("change", function(){           // User No.
-		topic_pointer = [0,1,2,3,4,5,6,7,8,9,10];
+		if (source5 != "-UModel-"){topic_pointer = [0,1,2,3,4,5,6,7,8,9,10];}
 		init(true);
 		});  
 	dropdown_3.on("change", function(){init(true);});   // Thread type
@@ -539,12 +536,11 @@
 			topicThreads = 2;
 		}   
 
-		// if (source5 == "-UModel-"){
-		// var jsonfile = "./data/NewIDs" + source5 + "/Dataset_" + array[0] + "/ProvThreads/" + array[1] + "_" + source2 + "_" + source3 + "_" + source4 + ".json"; // .toString()	
-		// }else{
-		// var jsonfile = "./data/NewIDs" + source5 + source6 + "/Dataset_" + array[0] + "/ProvThreads/" + array[1] + "_" + source2 + "_" + source3 + "_" + source4 + ".json"; // .toString()
-		// }
-		var jsonfile = "./data/new_datasets/Dataset_" + array[0] + "/ProvThreads/" +source5+ "/" + source6 + "/" + array[1] + "_" + source2 + "_" + source3 + "_" + source4 + ".json";
+		if (source5 == "-UModel-"){
+		var jsonfile = "./prov/data/NewIDs" + source5 + "/Dataset_" + array[0] + "/ProvThreads/" + array[1] + "_" + source2 + "_" + source3 + "_" + source4 + ".json"; // .toString()	
+		}else{
+		var jsonfile = "./prov/data/NewIDs" + source5 + source6 + "/Dataset_" + array[0] + "/ProvThreads/" + array[1] + "_" + source2 + "_" + source3 + "_" + source4 + ".json"; // .toString()
+		}
 		console.log(jsonfile);
 
 		d3.json(jsonfile, function(error, json){
@@ -621,13 +617,12 @@
 	function wordTags(){
 
 		
-		// if (source5 == "-UModel-"){
-		// var new_jsonfile = "./data/NewIDs" + source5 + "/Dataset_" + array[0] + "/EntitiesList/" + array[1] + "_" + source2 + "_ClassNum" + source4 + ".json"; 
-		// }else{
-		// var new_jsonfile = "./data/NewIDs" + source5 + source6 + "/Dataset_" + array[0] + "/EntitiesList/" + array[1] + "_" + source2 + "_ClassNum" + source4 + ".json";
-		// }
-		var new_jsonfile = "./data/new_datasets/Dataset_" + array[0] + "/cluster_summary/" +source5+ "/" + source6 +"/"+ array[1] + "_" + source2 + "_interaction_" + source4 + ".json";
-		console.log("word list: ", new_jsonfile)
+		if (source5 == "-UModel-"){
+		var new_jsonfile = "./prov/data/NewIDs" + source5 + "/Dataset_" + array[0] + "/EntitiesList/" + array[1] + "_" + source2 + "_ClassNum" + source4 + ".json"; 
+		}else{
+		var new_jsonfile = "./prov/data/NewIDs" + source5 + source6 + "/Dataset_" + array[0] + "/EntitiesList/" + array[1] + "_" + source2 + "_ClassNum" + source4 + ".json";
+		}
+
 
 		var count = 0;
 		var count1 = 0;
@@ -641,7 +636,7 @@
 		}
 
 		for (var count_all = 0; count_all < source4; count_all++){
-			boundingBox[count_all] = (oldTagPos + count_all*wordtags_width); //110);
+			boundingBox[count_all] = (oldTagPos + count_all*110);
 		}
 
 		d3.json(new_jsonfile, function(error, new_json){
@@ -674,7 +669,7 @@
 				new_json[i].keywords = tempTen.concat(new_json[i].keywords.slice(9, 30));				
 			}
 
-				
+				wordtags_width = 150;
 				chart.selectAll(".wordLists").remove();
 				chart.selectAll(".tag").remove();
 				
@@ -691,10 +686,10 @@
 					.attr("stroke", "none")
 				    .attr("rx", 6)
 					.attr("ry", 6)
-					.attr("x", function(d,i){return (-0 + i*160);}) 
-					.attr("y", function(d,i){return 1;})
+					.attr("x", function(d,i){return (i*160);}) 
+					.attr("y", function(d,i){return (1);})
 					.attr("width",  function(d,i){return wordtags_width})
-					.attr("height",wordtags_height)
+					.attr("height",380)
 					.attr("transform", "translate( " + tagPos + ", 10)")  //+ margin.left + (width/2 - keywords_width/2 ) +
 					.on("mouseover", function(){
 						if (singling ==0){
@@ -753,6 +748,8 @@
 						for (var kk=0;kk<11;kk++){
 						chart.plotArea.selectAll(".t-" + kk.toString())
 							.style("stroke",function(d){return d.color;})   // function(d){ return myColor[d.paintIt]})
+							// .style("opacity", 1.0);
+							// .style("stroke-width", pathStroke);
 						}
 					}
 				})
@@ -760,8 +757,6 @@
 
 					var me = d3.select(this).attr('class').split("-")[1]
 					me = parseInt(me) + 1
-
-					d3.selectAll(".wordtag-"+(me-1).toString()).moveToFront();
 
 					chart.plotArea.selectAll(".class-"+me.toString()).moveToFront();
 
@@ -792,7 +787,7 @@
 								})
 								.attr("x", 120)
 								.attr("text-anchor", "middle")
-								.attr("font-size", 4)
+								.attr("font-size", topicFont)
 								.attr("class", "tspan" + j)
 								.on("mouseover", (d2) => {
 									var chosenWords = wordtags.selectAll("text").filter((di)=>{
@@ -800,7 +795,7 @@
 											return true;
 										}
 									});
-									chosenWords.attr("fill", "yellow"); //.attr("font-style", "oblique").attr("font-size", 30);
+									chosenWords.attr("fill", "yellow").attr("font-style", "oblique").attr("font-size", 30);
 								})
 								.on("mouseout", (d2) => {
 									var chosenWords = wordtags.selectAll("text").filter((di)=>{
@@ -808,7 +803,7 @@
 											return true;
 										}
 									});
-									chosenWords.attr("fill", "black"); // .attr("font-style", "normal").attr("font-size", 18);
+									chosenWords.attr("fill", "black").attr("font-style", "normal").attr("font-size", 18);
 								});
 							}}})
 						.attr("transform", "translate( " + (chartWidth+25) + ", 20)");
@@ -864,7 +859,7 @@
 							
 							.attr("x", i * 160 + 75)
 							.attr("text-anchor", "middle")
-							.attr("font-size", 15)
+							.attr("font-size", 18)
 							.attr("class", "tspan-" + j)
 							.on("mouseover", (d2) => {
 								var chosenWords = wordtags.selectAll("text").filter((di)=>{
@@ -872,7 +867,7 @@
 										return true;
 									}
 								});
-								chosenWords.attr("fill", "yellow"); // .attr("font-style", "oblique").attr("font-size", 20);
+								chosenWords.attr("fill", "yellow").attr("font-style", "oblique").attr("font-size", 20);
 							})
 							.on("mouseout", (d2) => {
 								var chosenWords = wordtags.selectAll("text").filter((di)=>{
@@ -880,7 +875,7 @@
 										return true;
 									}
 								});
-								chosenWords.attr("fill", "black"); // .attr("font-style", "normal").attr("font-size", 18);
+								chosenWords.attr("fill", "black").attr("font-style", "normal").attr("font-size", 18);
 								wordtags.selectAll(".tspan2").attr("fill", "none")
 							});
 					}
@@ -902,7 +897,7 @@
 								var yP = 10 ? (1.8*10 + 1.8).toString()+"em" : "1.8em";
 								return yP;
 							})
-							.attr("x", i * 160 + 75)
+							.attr("x", i * 110 + 50)
 							.attr("text-anchor", "middle")
 							.attr("font-size", 18)
 							.attr("class", "tspan2")
@@ -912,7 +907,7 @@
 										return true;
 									}
 								});
-								chosenWords.attr("fill", "yellow");//.attr("font-style", "oblique").attr("font-size", 20);
+								chosenWords.attr("fill", "yellow").attr("font-style", "oblique").attr("font-size", 20);
 							})
 							.on("mouseout", (d2) => {
 								var chosenWords = wordtags.selectAll("text").filter((di)=>{
@@ -920,7 +915,7 @@
 										return true;
 									}
 								});
-								chosenWords.attr("fill", "none");//.attr("font-style", "normal").attr("font-size", 18);
+								chosenWords.attr("fill", "none").attr("font-style", "normal").attr("font-size", 18);
 							});
 					}
 					})
@@ -1034,21 +1029,20 @@
 
 				// If array size one with one object
 				for (var i = 0; i < data.length; i++){
-					
 					if (data[i].ClassNum.length == null){
-						console.log("No class number assigned")
-						// data[i].ClassNum = data[i].ClassNum;
+						data[i].ClassNum = [data[i].ClassNum];
 					}
 
-					data[i].classID = data[i].ClassNum;
-					
+
+					data[i].classID = [];
 					// Trying to get a list of class nums...
 					for (var k = 0; k < data[i].ClassNum.length; k++){
-						// data[i].classID.push(data[i].ClassNum);
+						data[i].classID.push(data[i].ClassNum[k]);
 						if (classIDList.length == 0) {
-							classIDList.push(data[i].classID);
-						} else if (classIDList.filter(function(d) {return d == data[i].classID;}).length == 0){
-							classIDList.push(data[i].classID);
+							classIDList.push(data[i].classID[k]);
+						} else if (classIDList.filter(function(d) {return d == data[i].classID[k];}).length == 0){
+							classIDList.push(data[i].classID[k]);
+						} else {
 						}
 					}
 				}
@@ -1092,11 +1086,11 @@
 					var prevY = 0;
 					var timeBefore = 0;
 					var beingRead = false;
-					var currClass = data[i].ClassNum;
+					var currClass = data[i].ClassNum[0];
 
 					// Making sure the array of arrays is properly initialized
-					if (classInfo[data[i].ClassNum] == null){
-						console.log('Array does not include this class.', data[i].ClassNum, classInfo[data[i].ClassNum]);
+					if (classInfo[data[i].ClassNum[0]] == null){
+						console.log('Array does not include this class.', data[i].ClassNum[0], classInfo[data[i].ClassNum[0]]);
 						return;
 					}
 
@@ -1127,69 +1121,68 @@
 							InteractionType: data[i].InteractionType,
 							prevTime: timeBefore,
 							yPrev : prevY,
-							classNum : data[i].ClassNum,
+							classNum : data[i].ClassNum[0],
 							DocNum : data[i].DocNum,
 							tags : data[i].tags,
 							stepHeight: data[i].stepHeight,
-							myColor1: data[i].ClassNum
+							myColor1: data[i].ClassNum[0]
 
 						});
 						anotherLine[currClass].push();             // push to curvy lines
-					}
-// 					else {
-// 						//  --------------------------  IS A LINK -------------------------
-// 						// Finding out which class is higher in value.
-// 						var classNum_ = new Array(2);
-// 						classNum_[0] = classInfo[data[i].ClassNum[0]].length >= 1 ? classInfo[data[i].ClassNum[0]][classInfo[data[i].ClassNum[0]].length-1] : null;
-// 						classNum_[1] = classInfo[data[i].ClassNum[1]].length >= 1 ? classInfo[data[i].ClassNum[1]][classInfo[data[i].ClassNum[1]].length-1] : null;
-// 						var greaterClassNum = ((classNum[0] != null ? classNum[0].yPos : 0)  > (classNum[1] != null ? classNum[1].yPos : 0)) ? 0 : 1;
-// 						var otherClassNum = greaterClassNum == 0 ? 1 : 0;
-// // ---------------------------------------------------------------------------------------------------------------
+					} else {
+						//  --------------------------  IS A LINK -------------------------
+						// Finding out which class is higher in value.
+						var classNum_ = new Array(2);
+						classNum_[0] = classInfo[data[i].ClassNum[0]].length >= 1 ? classInfo[data[i].ClassNum[0]][classInfo[data[i].ClassNum[0]].length-1] : null;
+						classNum_[1] = classInfo[data[i].ClassNum[1]].length >= 1 ? classInfo[data[i].ClassNum[1]][classInfo[data[i].ClassNum[1]].length-1] : null;
+						var greaterClassNum = ((classNum[0] != null ? classNum[0].yPos : 0)  > (classNum[1] != null ? classNum[1].yPos : 0)) ? 0 : 1;
+						var otherClassNum = greaterClassNum == 0 ? 1 : 0;
+// ---------------------------------------------------------------------------------------------------------------
 
-// 						// Filling in the information.
-// 					if (classNum_[1] == null) {classNum_[1] = classNum_[0];}
-// 					if (classNum_[0] == null) {classNum_[0] = classNum_[1];}
-// 						y = classNum_[greaterClassNum].stepHeight;
-// 						prevY = classNum_[greaterClassNum].yPos;
-// 						y = y + prevY;
+						// Filling in the information.
+					if (classNum_[1] == null) {classNum_[1] = classNum_[0];}
+					if (classNum_[0] == null) {classNum_[0] = classNum_[1];}
+						y = classNum_[greaterClassNum].stepHeight;
+						prevY = classNum_[greaterClassNum].yPos;
+						y = y + prevY;
 
-// 						timeBefore = classNum_[greaterClassNum].Time;
-// 						var linkPrevTime = data[i].Time;
-// 						var linkPrevY = 0;
-// 						if (classNum_[otherClassNum] != null){
-// 							linkPrevTime = classNum_[otherClassNum].Time;
-// 							linkY = classNum_[otherClassNum].stepHeight;     
-// 							linkPrevY = classNum_[otherClassNum].yPos;  
-// 							linkY = linkY + linkPrevY;
-// 						}
-// 						// Redundant.
-// 						// Pushing into classInfo array.
-// 						var sourceData = classInfo[data[i].ClassNum[otherClassNum]].push({
-// 							Time : data[i].Time,
-// 							yPos : linkY,
-// 							InteractionType: data[i].InteractionType,
-// 							prevTime: linkPrevTime,
-// 							yPrev : linkPrevY,
-// 							classNum : data[i].ClassNum[otherClassNum],
-// 							DocNum : data[i].DocNum,
-// 							tags : data[i].tags,
-// 							stepHeight: data[i].stepHeight,
-// 							myColor1: data[i].ClassNum[0]
-// 						});
-// 						var targetData = classInfo[data[i].ClassNum[greaterClassNum]].push({
-// 							Time : data[i].Time,
-// 							yPos : y,
-// 							InteractionType: data[i].InteractionType,
-// 							prevTime: timeBefore,
-// 							yPrev : prevY,
-// 							classNum : data[i].ClassNum[greaterClassNum],
-// 							DocNum : data[i].DocNum,
-// 							tags : data[i].tags,
-// 							stepHeight: data[i].stepHeight,
-// 							myColor1: data[i].ClassNum[0]
-// 						});
-// 						classLinks.push({source: classInfo[data[i].ClassNum[otherClassNum]][sourceData-1], target: classInfo[data[i].ClassNum[greaterClassNum]][targetData-1]});
-// 					}            //  -------------------------- Done with all data points -------------------------
+						timeBefore = classNum_[greaterClassNum].Time;
+						var linkPrevTime = data[i].Time;
+						var linkPrevY = 0;
+						if (classNum_[otherClassNum] != null){
+							linkPrevTime = classNum_[otherClassNum].Time;
+							linkY = classNum_[otherClassNum].stepHeight;     
+							linkPrevY = classNum_[otherClassNum].yPos;  
+							linkY = linkY + linkPrevY;
+						}
+						// Redundant.
+						// Pushing into classInfo array.
+						var sourceData = classInfo[data[i].ClassNum[otherClassNum]].push({
+							Time : data[i].Time,
+							yPos : linkY,
+							InteractionType: data[i].InteractionType,
+							prevTime: linkPrevTime,
+							yPrev : linkPrevY,
+							classNum : data[i].ClassNum[otherClassNum],
+							DocNum : data[i].DocNum,
+							tags : data[i].tags,
+							stepHeight: data[i].stepHeight,
+							myColor1: data[i].ClassNum[0]
+						});
+						var targetData = classInfo[data[i].ClassNum[greaterClassNum]].push({
+							Time : data[i].Time,
+							yPos : y,
+							InteractionType: data[i].InteractionType,
+							prevTime: timeBefore,
+							yPrev : prevY,
+							classNum : data[i].ClassNum[greaterClassNum],
+							DocNum : data[i].DocNum,
+							tags : data[i].tags,
+							stepHeight: data[i].stepHeight,
+							myColor1: data[i].ClassNum[0]
+						});
+						classLinks.push({source: classInfo[data[i].ClassNum[otherClassNum]][sourceData-1], target: classInfo[data[i].ClassNum[greaterClassNum]][targetData-1]});
+					}            //  -------------------------- Done with all data points -------------------------
 				}
 
                                 //  ---------------------------- Push the last Point ------------------------------
@@ -1220,11 +1213,11 @@
 							InteractionType: "END",
 							prevTime: timeBefore,
 							yPrev : y,
-							classNum : data[i].ClassNum,
+							classNum : data[i].ClassNum[0],
 							DocNum : data[i].DocNum,
 							tags : data[i].tags,
 							stepHeight: data[i].stepHeight,
-							myColor1: data[i].ClassNum
+							myColor1: data[i].ClassNum[0]
 						});
 						classInfo[i].push(endData[i][0]);
 					}
@@ -1268,15 +1261,14 @@
 					// --------------------- Analysis task ----------------------
 					// --------------------- Analysis task2 ---------------------
                     if ((topicThreads ==1) | (topicThreads > 2)){
-						// if (raw_data[i].ClassNum.length == 1){
-							raw_data[i].ClassNum =  topic_pointer[raw_data[i].ClassNum -1] + 1;
+						if (raw_data[i].ClassNum.length == 1){
+							raw_data[i].ClassNum[0] =  topic_pointer[raw_data[i].ClassNum[0] -1] + 1;
 							data_temp.push(raw_data[i])
-						// }
-						// else{
-						// 	raw_data[i].ClassNum[0] = topic_pointer[raw_data[i].ClassNum[0] -1] + 1;
-						// 	raw_data[i].ClassNum[1] = topic_pointer[raw_data[i].ClassNum[0] -1] + 1;
-						// 	data_temp.push(raw_data[i])
-						// }
+						}else{
+							raw_data[i].ClassNum[0] = topic_pointer[raw_data[i].ClassNum[0] -1] + 1;
+							raw_data[i].ClassNum[1] = topic_pointer[raw_data[i].ClassNum[0] -1] + 1;
+							data_temp.push(raw_data[i])
+						}
 					// -------------------- Interest Threads --------------------
 					
 					}else if (topicThreads == 2){
@@ -1286,9 +1278,9 @@
 								if (raw_data[i].stepHeight > 0){
 
 											// ---- if pointer is different from the class Number ----
-									if (raw_data[i].ClassNum !=  topic_pointer[raw_data[i].ClassNum -1] + 1){
-										raw_data[i].ClassNum =  topic_pointer[raw_data[i].ClassNum -1] + 1;
-										// if (raw_data[i].ClassNum.length > 1){raw_data[i].ClassNum[1] = raw_data[i].ClassNum;} //topic B is same as A
+									if (raw_data[i].ClassNum[0] !=  topic_pointer[raw_data[i].ClassNum[0] -1] + 1){
+										raw_data[i].ClassNum[0] =  topic_pointer[raw_data[i].ClassNum[0] -1] + 1;
+										if (raw_data[i].ClassNum.length > 1){raw_data[i].ClassNum[1] = raw_data[i].ClassNum[0];} //topic B is same as A
 										data_temp.push(raw_data[i]);  			  // Push it in new data array
 										for (var kk = i - 11; kk< i + 11; kk++){  // ---- It's negarive companies steps ----
 
@@ -1298,7 +1290,7 @@
 												kkk = raw_data.length - 1;}
 
 											if ((raw_data[kkk].Time == raw_data[i].Time) & (raw_data[kkk].stepHeight < 0)) {   // if neighbors are same time and negative
-												if (raw_data[kkk].ClassNum !=  topic_pointer[raw_data[i].ClassNum -1] + 1) {
+												if (raw_data[kkk].ClassNum[0] !=  topic_pointer[raw_data[i].ClassNum[0] -1] + 1) {
 													// Multiply by number of same class# in pointer then push
 													data_temp.push(raw_data[kkk]);   // push if pointer is the same as actual class
 												}
@@ -1314,7 +1306,7 @@
 												kkk = raw_data.length - 1;}
 
 											if ((raw_data[kkk].Time == raw_data[i].Time) & (raw_data[kkk].stepHeight < 0)) {   // if neighbors are same time and negative
-												if (raw_data[kkk].ClassNum ==  topic_pointer[raw_data[kkk].ClassNum -1] + 1) {
+												if (raw_data[kkk].ClassNum[0] ==  topic_pointer[raw_data[kkk].ClassNum[0] -1] + 1) {
 													// Multiply by number of same class# in pointer then push
 													data_temp.push(raw_data[kkk]);   // push if pointer is the same as actual class
 												}
@@ -1382,17 +1374,17 @@
 						data_temp[i].ClassNum = [data_temp[i].ClassNum];
 					}
 
-					if ( (data_temp[i].ClassNum == 0)){   // eliminate any topic 0 interaction!
-						data_temp[i].ClassNum = 1
+					if ( (data_temp[i].ClassNum[0] == 0)){   // eliminate any topic 0 interaction!
+						data_temp[i].ClassNum = [1]
 					}
-					if ( (data_temp[i].ClassNum == 0) | (data_temp[i].ClassNum == null)){   // eliminate any topic 0 interaction!
-						data_temp[i].ClassNum = 1
+					if ( (data_temp[i].ClassNum[0] == 0) | (data_temp[i].ClassNum == null)){   // eliminate any topic 0 interaction!
+						data_temp[i].ClassNum = [1]
 					}
 					data_temp[i].classID = [];
 					
 					// Trying to get a list of class nums...
 					for (var k = 0; k < data_temp[i].ClassNum.length; k++){
-						data_temp[i].classID.push(data_temp[i].ClassNum);
+						data_temp[i].classID.push(data_temp[i].ClassNum[k]);
 						if (classIDList.length == 0) {
 							classIDList.push(data_temp[i].classID[k]);
 						} else if (classIDList.filter(function(d) {return d == data_temp[i].classID[k];}).length == 0){
@@ -1436,24 +1428,24 @@
 
 				// ---------------------------- Putting data_temp in classInfo array! ---------------------------
 				for (var i = 0; i < data_temp.length; i++){
-					var y = 0; //0.0001;
+					var y = 0.0001;
 					var prevY = 0;
 					var timeBefore = 0;
 					var beingRead = false;
 					// If any class zero exists!
-					if (classInfo[data_temp[i].ClassNum] == null){
-						data_temp[i].ClassNum = 1;
+					if (classInfo[data_temp[i].ClassNum[0]] == null){
+						data_temp[i].ClassNum = [1];
 					}
 					// If negative time exists!
 					if (data_temp[i].Time < 0){
 						data_temp[i].Time = 0;
 					}
 
-					var currClass = data_temp[i].ClassNum;
+					var currClass = data_temp[i].ClassNum[0];
 
 					// Making sure the array of arrays is properly initialized
-					if (classInfo[data_temp[i].ClassNum] == null){
-						console.log('Array does not include this class.', data_temp[i].ClassNum, classInfo[data_temp[i].ClassNum]);
+					if (classInfo[data_temp[i].ClassNum[0]] == null){
+						console.log('Array does not include this class.', data_temp[i].ClassNum[0], classInfo[data_temp[i].ClassNum[0]]);
 						alert("Array does not include this class!", data_temp[i] 	);
 						return;
 					}
@@ -1473,7 +1465,7 @@
 							
 							if (y < 0){y = y  * magicNumber;}   // Interest Threads
 							y = y_temp + y  		// new y
-							if (y < 0){y = 0}    // No negative threads  0.001
+							if (y < 0){y = 0.001}    // No negative threads
 							if (y > maxY){maxY = y;}   //Update max Yaxis value
 							}
 							
@@ -1495,68 +1487,67 @@
 							InteractionType: data_temp[i].InteractionType,
 							prevTime: timeBefore,
 							yPrev : prevY,
-							classNum : data_temp[i].ClassNum,
+							classNum : data_temp[i].ClassNum[0],
 							DocNum : data_temp[i].DocNum,
 							tags : data_temp[i].tags,
 							stepHeight: data_temp[i].stepHeight,
-							myColor1: data_temp[i].ClassNum
+							myColor1: data_temp[i].ClassNum[0]
 
 						});
-					}
-					//  else {
-					// 	//  --------------------------  IS A LINK -------------------------
-					// 	// Finding out which class is higher in value.
-					// 	var classNum_ = new Array(2);
-					// 	classNum_[0] = classInfo[data_temp[i].ClassNum[0]].length >= 1 ? classInfo[data_temp[i].ClassNum[0]][classInfo[data_temp[i].ClassNum[0]].length-1] : null;
-					// 	classNum_[1] = classInfo[data_temp[i].ClassNum[0]].length >= 1 ? classInfo[data_temp[i].ClassNum[0]][classInfo[data_temp[i].ClassNum[0]].length-1] : null;   //classNum_[1] = classInfo[data_temp[i].ClassNum[1]].length >= 1 ? classInfo[data_temp[i].ClassNum[1]][classInfo[data_temp[i].ClassNum[1]].length-1] : null;
-					// 	var greaterClassNum = ((classNum[0] != null ? classNum[0].yPos : 0)  > (classNum[1] != null ? classNum[1].yPos : 0)) ? 0 : 1;
-					// 	var otherClassNum = greaterClassNum == 0 ? 1 : 0;
+					} else {
+						//  --------------------------  IS A LINK -------------------------
+						// Finding out which class is higher in value.
+						var classNum_ = new Array(2);
+						classNum_[0] = classInfo[data_temp[i].ClassNum[0]].length >= 1 ? classInfo[data_temp[i].ClassNum[0]][classInfo[data_temp[i].ClassNum[0]].length-1] : null;
+						classNum_[1] = classInfo[data_temp[i].ClassNum[1]].length >= 1 ? classInfo[data_temp[i].ClassNum[1]][classInfo[data_temp[i].ClassNum[1]].length-1] : null;
+						var greaterClassNum = ((classNum[0] != null ? classNum[0].yPos : 0)  > (classNum[1] != null ? classNum[1].yPos : 0)) ? 0 : 1;
+						var otherClassNum = greaterClassNum == 0 ? 1 : 0;
 
-					// 	// Filling in the information.
+						// Filling in the information.
 
-					// if (classNum_[1] == null) {classNum_[1] = classNum_[0];}
-					// if (classNum_[0] == null) {classNum_[0] = classNum_[1];}
-					// 	y = classNum_[greaterClassNum].stepHeight;       // new
-					// 	prevY = classNum_[greaterClassNum].yPos;  //new
-					// 	y = y + prevY;
+					if (classNum_[1] == null) {classNum_[1] = classNum_[0];}
+					if (classNum_[0] == null) {classNum_[0] = classNum_[1];}
+						y = classNum_[greaterClassNum].stepHeight;       // new
+						prevY = classNum_[greaterClassNum].yPos;  //new
+						y = y + prevY;
 
-					// 	timeBefore = classNum_[greaterClassNum].Time;
-					// 	var linkPrevTime = data_temp[i].Time;
-					// 	var linkPrevY = 0;
-					// 	if (classNum_[otherClassNum] != null){
-					// 		linkPrevTime = classNum_[otherClassNum].Time;
-					// 		linkY = classNum_[otherClassNum].stepHeight;       // new
-					// 		linkPrevY = classNum_[otherClassNum].yPos;  //new
-					// 		linkY = linkY + linkPrevY;
-					// 	}
-					// 	// Redundant.
-					// 	// Pushing into classInfo array.
-					// 	var sourceData = classInfo[data_temp[i].ClassNum[otherClassNum]].push({
-					// 		Time : data_temp[i].Time,
-					// 		yPos : linkY, 
-					// 		InteractionType: data_temp[i].InteractionType,
-					// 		prevTime: linkPrevTime,
-					// 		yPrev : linkPrevY,
-					// 		classNum : data_temp[i].ClassNum[otherClassNum],
-					// 		DocNum : data_temp[i].DocNum,
-					// 		tags : data_temp[i].tags,
-					// 		stepHeight: data_temp[i].stepHeight,
-					// 		myColor1: data_temp[i].ClassNum[0]
-					// 	});
-					// 	var targetData = classInfo[data_temp[i].ClassNum[otherClassNum]].push({    // var targetData = classInfo[data_temp[i].ClassNum[greaterClassNum]].push({
-					// 		Time : data_temp[i].Time,
-					// 		yPos : y,
-					// 		InteractionType: data_temp[i].InteractionType,
-					// 		prevTime: timeBefore,
-					// 		yPrev : prevY,
-					// 		classNum : data_temp[i].ClassNum[greaterClassNum],
-					// 		DocNum : data_temp[i].DocNum,
-					// 		tags : data_temp[i].tags,
-					// 		stepHeight: data_temp[i].stepHeight,
-					// 		myColor1: data_temp[i].ClassNum[0]
-					// 	});
-					// 	classLinks.push({source: classInfo[data_temp[i].ClassNum[otherClassNum]][sourceData-1], target: classInfo[data_temp[i].ClassNum[otherClassNum]][targetData-1]});  //classLinks.push({source: classInfo[data_temp[i].ClassNum[otherClassNum]][sourceData-1], target: classInfo[data_temp[i].ClassNum[greaterClassNum]][targetData-1]});
-					// }            //  -------------------------- Done with all data_temp points -------------------------
+						timeBefore = classNum_[greaterClassNum].Time;
+						var linkPrevTime = data_temp[i].Time;
+						var linkPrevY = 0;
+						if (classNum_[otherClassNum] != null){
+							linkPrevTime = classNum_[otherClassNum].Time;
+							linkY = classNum_[otherClassNum].stepHeight;       // new
+							linkPrevY = classNum_[otherClassNum].yPos;  //new
+							linkY = linkY + linkPrevY;
+						}
+						// Redundant.
+						// Pushing into classInfo array.
+						var sourceData = classInfo[data_temp[i].ClassNum[otherClassNum]].push({
+							Time : data_temp[i].Time,
+							yPos : linkY, 
+							InteractionType: data_temp[i].InteractionType,
+							prevTime: linkPrevTime,
+							yPrev : linkPrevY,
+							classNum : data_temp[i].ClassNum[otherClassNum],
+							DocNum : data_temp[i].DocNum,
+							tags : data_temp[i].tags,
+							stepHeight: data_temp[i].stepHeight,
+							myColor1: data_temp[i].ClassNum[0]
+						});
+						var targetData = classInfo[data_temp[i].ClassNum[greaterClassNum]].push({
+							Time : data_temp[i].Time,
+							yPos : y,
+							InteractionType: data_temp[i].InteractionType,
+							prevTime: timeBefore,
+							yPrev : prevY,
+							classNum : data_temp[i].ClassNum[greaterClassNum],
+							DocNum : data_temp[i].DocNum,
+							tags : data_temp[i].tags,
+							stepHeight: data_temp[i].stepHeight,
+							myColor1: data_temp[i].ClassNum[0]
+						});
+						classLinks.push({source: classInfo[data_temp[i].ClassNum[otherClassNum]][sourceData-1], target: classInfo[data_temp[i].ClassNum[greaterClassNum]][targetData-1]});
+					}            //  -------------------------- Done with all data_temp points -------------------------
 				}
 
                                 //  ---------------------------- Push the last Point ------------------------------
@@ -1588,11 +1579,11 @@
 							InteractionType: "END",
 							prevTime: timeBefore,
 							yPrev : y,
-							classNum : data_temp[i].ClassNum,
+							classNum : data_temp[i].ClassNum[0],
 							DocNum : data_temp[i].DocNum,
 							tags : data_temp[i].tags,
 							stepHeight: data_temp[i].stepHeight,
-							myColor1: data_temp[i].ClassNum
+							myColor1: data_temp[i].ClassNum[0]
 						});
 						classInfo[i].push(endData[i][0]);
 					}
@@ -1643,13 +1634,13 @@
 			for (var i = 0; i < totLength - 1; i++){   // check all user interactions
 				soFar = [0,0,0,0,0,0,0,0,0,0,0];   // storing capacity for all possible topics
 					
-				if (jsondata[i].ClassNum == jsondata[i+1].ClassNum){   // if next topic is the same, Jump!
-					soFar[jsondata[i].ClassNum] = soFar[jsondata[i].ClassNum] + parseInt(jsondata[i].stepHeight)
-					soFar2[jsondata[i].ClassNum] = soFar2[jsondata[i].ClassNum] + parseInt(jsondata[i].stepHeight)
+				if (jsondata[i].ClassNum[0] == jsondata[i+1].ClassNum[0]){   // if next topic is the same, Jump!
+					soFar[jsondata[i].ClassNum[0]] = soFar[jsondata[i].ClassNum[0]] + parseInt(jsondata[i].stepHeight)
+					soFar2[jsondata[i].ClassNum[0]] = soFar2[jsondata[i].ClassNum[0]] + parseInt(jsondata[i].stepHeight)
 				}else{
 					// ------- if next topic is different ----------
-					soFar[jsondata[i].ClassNum] = soFar[jsondata[i].ClassNum] + parseInt(jsondata[i].stepHeight)
-					soFar2[jsondata[i].ClassNum] = soFar2[jsondata[i].ClassNum] + parseInt(jsondata[i].stepHeight)
+					soFar[jsondata[i].ClassNum[0]] = soFar[jsondata[i].ClassNum[0]] + parseInt(jsondata[i].stepHeight)
+					soFar2[jsondata[i].ClassNum[0]] = soFar2[jsondata[i].ClassNum[0]] + parseInt(jsondata[i].stepHeight)
 			
 						// Switch from counting interactions to measuring time. 
 						var magicNumber_3 = 1
@@ -1662,7 +1653,7 @@
 							}else if ( (jsondata[i+count].Time > jsondata[i].Time + magicNumber_2*600)){  
 								magicNumber_3 = count;
 								count = 1010;   // jump out!
-							}else if (( (jsondata[i+count+1].ClassNum != jsondata[i].ClassNum) | (jsondata[i+count+1].ClassNum != jsondata[i+count].ClassNum)) & (jsondata[i+count].InteractionType == "search")){  // 
+							}else if (( (jsondata[i+count+1].ClassNum[0] != jsondata[i].ClassNum[0]) | (jsondata[i+count+1].ClassNum[0] != jsondata[i+count].ClassNum[0])) & (jsondata[i+count].InteractionType == "search")){  // 
 								magicNumber_3 = count;
 								if (count > 1) magicNumber_3 = count -2;
 								count = 1010;   // jump out!
@@ -1675,25 +1666,25 @@
 						for (var j = 1 ; j < (magicNumber_3 + 1) ; j++){       // start checking all in the frame size and accumulate soFar setep heights!
 							inFrame = i+j;     								 // last point to check
 							if (inFrame > (totLength - 1)) {inFrame = totLength - 2;}
-							soFar[jsondata[inFrame].ClassNum] = soFar[jsondata[inFrame].ClassNum] + parseInt(jsondata[inFrame].stepHeight);    // Sum up stepHeights in each class
-							soFar2[jsondata[inFrame].ClassNum] = soFar2[jsondata[inFrame].ClassNum] + parseInt(jsondata[inFrame].stepHeight);    // Sum up stepHeights in each class
+							soFar[jsondata[inFrame].ClassNum[0]] = soFar[jsondata[inFrame].ClassNum[0]] + parseInt(jsondata[inFrame].stepHeight);    // Sum up stepHeights in each class
+							soFar2[jsondata[inFrame].ClassNum[0]] = soFar2[jsondata[inFrame].ClassNum[0]] + parseInt(jsondata[inFrame].stepHeight);    // Sum up stepHeights in each class
 						}
 
 					for (var ii = 0; ii < 11 ; ii++) {     						// checking class 1 to 10
 						if (Math.max.apply(null, soFar) ==  soFar[ii]){          // largest compoent
-							if (ii != jsondata[i].ClassNum){
+							if (ii != jsondata[i].ClassNum[0]){
 
 									for (var jj = oldI ; jj < (i + 1) ; jj++){           // Turn all in the frame to the Dominant = Original topic!
-										jsondata[jj].ClassNum = ii; 				// largers stepHeight
-											// if (jsondata[jj].ClassNum.length > 1) { jsondata[jj].ClassNum = ii;}     // largers stepHeight
+										jsondata[jj].ClassNum[0] = ii; 				// largers stepHeight
+											if (jsondata[jj].ClassNum.length > 1) { jsondata[jj].ClassNum[1] = ii;}     // largers stepHeight
 										analysisData.push(jsondata[jj]);
-										soFar2[jsondata[jj].ClassNum] = soFar2[jsondata[jj].ClassNum] + parseInt(jsondata[jj].stepHeight);    // Sum up stepHeights in each class
+										soFar2[jsondata[jj].ClassNum[0]] = soFar2[jsondata[jj].ClassNum[0]] + parseInt(jsondata[jj].stepHeight);    // Sum up stepHeights in each class
 									}
 
 									fake = {
 										"DocNum": "Topic Change",
 										"tags": [],
-										"ClassNum": jsondata[i].ClassNum,   // close the last segment 
+										"ClassNum": [jsondata[i].ClassNum[0]],   // close the last segment 
 										"stepHeight": -10000,
 										"Time": jsondata[i+1].Time - 20,   //  "Time": jsondata[i].Time + 20, after the last sample 
 										"Duration": 20,
@@ -1701,17 +1692,17 @@
 									}
 									analysisData.push(fake)
 									e_point = jsondata[i+1].Time;   // End point of the last strategy rect
-									startegy_mat.push([s_point, e_point, soFar2[jsondata[i].ClassNum]]);
+									startegy_mat.push([s_point, e_point, soFar2[jsondata[i].ClassNum[0]]]);
 									soFar2 = [0,0,0,0,0,0,0,0,0,0,0];
 
 									// change class num to the dominant class!
 									
 									for (var fake_counter = 1; fake_counter < 11; fake_counter++){
-										if (fake_counter != jsondata[i].ClassNum){  // make all other classes zero! including the new segment! 
+										if (fake_counter != jsondata[i].ClassNum[0]){  // make all other classes zero! including the new segment! 
 											fake = {
 												"DocNum": "Topic Change",
 												"tags": [],
-												"ClassNum": fake_counter, 
+												"ClassNum": [fake_counter], 
 												"stepHeight": -10000,
 												"Time": jsondata[i+1].Time - 30, 
 												"Duration": 20,
@@ -1725,24 +1716,24 @@
 							 }else{    // Now draw the new segment ! 
 								
 								for (var jj = oldI ; jj < (i + 1) ; jj++){    
-										jsondata[jj].ClassNum = jsondata[i].ClassNum; // = ii   	// largers stepHeight
-										// if (jsondata[jj].ClassNum.length > 1) { jsondata[jj].ClassNum[1] = jsondata[i].ClassNum[0];} 	     // largers stepHeight
+										jsondata[jj].ClassNum[0] = jsondata[i].ClassNum[0]; // = ii   	// largers stepHeight
+										if (jsondata[jj].ClassNum.length > 1) { jsondata[jj].ClassNum[1] = jsondata[i].ClassNum[0];} 	     // largers stepHeight
 										analysisData.push(jsondata[jj])
 
 								}
 									
 								for (var jj = i+1 ; jj < (framEnd + 1) ; jj++){           // Turn all in the frame to the Dominant = Original topic!
-								jsondata[jj].ClassNum = jsondata[i].ClassNum; 		// largers stepHeight
-									// if (jsondata[jj].ClassNum.length > 1) { jsondata[jj].ClassNum = jsondata[i].ClassNum[0];} 	     // largers stepHeight
+								jsondata[jj].ClassNum[0] = jsondata[i].ClassNum[0]; 		// largers stepHeight
+									if (jsondata[jj].ClassNum.length > 1) { jsondata[jj].ClassNum[1] = jsondata[i].ClassNum[0];} 	     // largers stepHeight
 								analysisData.push(jsondata[jj])
-								soFar[jsondata[jj].ClassNum] = soFar[jsondata[jj].ClassNum] + parseInt(jsondata[jj].stepHeight)
+								soFar[jsondata[jj].ClassNum[0]] = soFar[jsondata[jj].ClassNum[0]] + parseInt(jsondata[jj].stepHeight)
 
 								}
 
 									var fake = {
 									"DocNum": "Topic Change",
 									"tags": [],
-									"ClassNum": jsondata[framEnd].ClassNum,
+									"ClassNum": [jsondata[framEnd].ClassNum[0]],
 									"stepHeight": -10000,
 									"Time": jsondata[framEnd+1].Time - 20,  // "Time": jsondata[framEnd].Time + 20 , after the last sample
 									"Duration": 20,
@@ -1750,15 +1741,15 @@
 									}
 									analysisData.push(fake);
 									e_point = jsondata[framEnd+1].Time;   // End point of the last strategy rect
-									startegy_mat.push([s_point, e_point,soFar2[jsondata[framEnd].ClassNum]]);
+									startegy_mat.push([s_point, e_point,soFar2[jsondata[framEnd].ClassNum[0]]]);
 									soFar2 = [0,0,0,0,0,0,0,0,0,0,0];
 
 									for (var fake_counter = 1; fake_counter < 11; fake_counter++){
-										if (fake_counter != jsondata[framEnd].ClassNum){
+										if (fake_counter != jsondata[framEnd].ClassNum[0]){
 									var fake = {
 									"DocNum": "Topic Change",
 									"tags": [],
-									"ClassNum": fake_counter,
+									"ClassNum": [fake_counter],
 									"stepHeight": -10000,
 									"Time": jsondata[framEnd+1].Time - 20,  
 									"Duration": 20,
@@ -1805,15 +1796,15 @@
 			for (var i = 0; i < totLength - 1; i++){   // check all user interactions
 				soFar = [0,0,0,0,0,0,0,0,0,0,0]; 	  // Storing capacity for all possible topics
 
-				if (jsondata[i].ClassNum == jsondata[i+1].ClassNum){   // if next topic is the same, Jump!
+				if (jsondata[i].ClassNum[0] == jsondata[i+1].ClassNum[0]){   // if next topic is the same, Jump!
 					analysisData.push(jsondata[i])
-					soFar[jsondata[i].ClassNum] = soFar[jsondata[i].ClassNum] + parseInt(jsondata[i].stepHeight)
-					soFar2[jsondata[i].ClassNum] = soFar2[jsondata[i].ClassNum] + parseInt(jsondata[i].stepHeight)
+					soFar[jsondata[i].ClassNum[0]] = soFar[jsondata[i].ClassNum[0]] + parseInt(jsondata[i].stepHeight)
+					soFar2[jsondata[i].ClassNum[0]] = soFar2[jsondata[i].ClassNum[0]] + parseInt(jsondata[i].stepHeight)
 				}else{                               // ------- if next topic is different ----------
 						analysisData.push(jsondata[i]) 
 
-						soFar[jsondata[i].ClassNum] = soFar[jsondata[i].ClassNum] + parseInt(jsondata[i].stepHeight)
-						soFar2[jsondata[i].ClassNum] = soFar2[jsondata[i].ClassNum] + parseInt(jsondata[i].stepHeight)
+						soFar[jsondata[i].ClassNum[0]] = soFar[jsondata[i].ClassNum[0]] + parseInt(jsondata[i].stepHeight)
+						soFar2[jsondata[i].ClassNum[0]] = soFar2[jsondata[i].ClassNum[0]] + parseInt(jsondata[i].stepHeight)
 					
 					
 						// Switch from counting interactions to measuring time. 
@@ -1828,7 +1819,7 @@
 							}else if ( jsondata[i+count].Time > jsondata[i].Time + magicNumber_2*600){
 								magicNumber_3 = count;
 								count = 1010;
-							}else if (( (jsondata[i+count+1].ClassNum != jsondata[i].ClassNum) | (jsondata[i+count+1].ClassNum != jsondata[i+count].ClassNum)) & (jsondata[i+count].InteractionType == "search")){  // 
+							}else if (( (jsondata[i+count+1].ClassNum[0] != jsondata[i].ClassNum[0]) | (jsondata[i+count+1].ClassNum[0] != jsondata[i+count].ClassNum[0])) & (jsondata[i+count].InteractionType == "search")){  // 
 								magicNumber_3 = count;
 								if (count > 1) magicNumber_3 = count - 1;
 								count = 1010;   // jump out!
@@ -1841,18 +1832,18 @@
 						for (var j = 1 ; j < (magicNumber_3 + 1) ; j++){       // start checking all in the frame size and accumulate soFar setep heights!
 							inFrame = i+j;       // last point to check
 							if ( inFrame > totLength - 1 ) {inFrame = totLength - 1;}
-							soFar[jsondata[inFrame].ClassNum] = soFar[jsondata[inFrame].ClassNum] + parseInt(jsondata[inFrame].stepHeight)    // Sum up stepHeights in each class
-							soFar2[jsondata[inFrame].ClassNum] = soFar2[jsondata[inFrame].ClassNum] + parseInt(jsondata[inFrame].stepHeight)    // Sum up stepHeights in each class
+							soFar[jsondata[inFrame].ClassNum[0]] = soFar[jsondata[inFrame].ClassNum[0]] + parseInt(jsondata[inFrame].stepHeight)    // Sum up stepHeights in each class
+							soFar2[jsondata[inFrame].ClassNum[0]] = soFar2[jsondata[inFrame].ClassNum[0]] + parseInt(jsondata[inFrame].stepHeight)    // Sum up stepHeights in each class
 						}
 
 					for (var ii = 0; ii < 11 ; ii++) {     // checking class 1 to 10
 						if (Math.max.apply(null, soFar) ==  soFar[ii]){          // largest compoent
 
-							if (ii != jsondata[i].ClassNum) {
+							if (ii != jsondata[i].ClassNum[0]) {
 								fake = {
 									"DocNum": "Topic Change",
 									"tags": [],
-									"ClassNum": jsondata[i].ClassNum,   //  before the first sample
+									"ClassNum": [jsondata[i].ClassNum[0]],   //  before the first sample
 									"stepHeight": -10000,
 									"Time": jsondata[i+1].Time - 20,  
 									"Duration": 20,
@@ -1861,16 +1852,16 @@
 								analysisData.push(fake)
 								e_point = jsondata[i+1].Time;   // End point of the last strategy rect
 
-								startegy_mat.push([s_point, e_point, soFar2[jsondata[i].ClassNum]]);
+								startegy_mat.push([s_point, e_point, soFar2[jsondata[i].ClassNum[0]]]);
 								soFar2 = [0,0,0,0,0,0,0,0,0,0,0];
 
 								
 								for (var fake_counter = 1; fake_counter < 11; fake_counter++){
-										if (fake_counter != jsondata[i].ClassNum){
+										if (fake_counter != jsondata[i].ClassNum[0]){
 								fake = {
 									"DocNum": "Topic Change",
 									"tags": [],
-									"ClassNum": fake_counter, 
+									"ClassNum": [fake_counter], 
 									"stepHeight": -10000,
 									"Time": jsondata[i+1].Time - 20, 
 									"Duration": 20,
@@ -1884,17 +1875,17 @@
 							 }else{
 
 								for (var jj = i+1 ; jj < (framEnd + 1) ; jj++){           // Turn all in the frame to the Dominant = Original topic!
-								jsondata[jj].ClassNum = jsondata[i].ClassNum; // = ii   	// largers stepHeight
-									// if (jsondata[jj].ClassNum.length > 1) { jsondata[jj].ClassNum[1] = jsondata[i].ClassNum[0];} 	     // largers stepHeight
+								jsondata[jj].ClassNum[0] = jsondata[i].ClassNum[0]; // = ii   	// largers stepHeight
+									if (jsondata[jj].ClassNum.length > 1) { jsondata[jj].ClassNum[1] = jsondata[i].ClassNum[0];} 	     // largers stepHeight
 								analysisData.push(jsondata[jj])
-								soFar[jsondata[jj].ClassNum] = soFar[jsondata[jj].ClassNum] + parseInt(jsondata[jj].stepHeight)
-								soFar2[jsondata[jj].ClassNum] = soFar2[jsondata[jj].ClassNum] + parseInt(jsondata[jj].stepHeight)
+								soFar[jsondata[jj].ClassNum[0]] = soFar[jsondata[jj].ClassNum[0]] + parseInt(jsondata[jj].stepHeight)
+								soFar2[jsondata[jj].ClassNum[0]] = soFar2[jsondata[jj].ClassNum[0]] + parseInt(jsondata[jj].stepHeight)
 								}
 
 									var fake = {
 									"DocNum": "Topic Change",
 									"tags": [],
-									"ClassNum": jsondata[framEnd].ClassNum, 
+									"ClassNum": [jsondata[framEnd].ClassNum[0]], 
 									"stepHeight": -10000,
 									"Time": jsondata[framEnd+1].Time - 20 ,  // after the last sample
 									"Duration": 20,
@@ -1903,15 +1894,15 @@
 									analysisData.push(fake);
 									e_point = jsondata[framEnd+1].Time ;   // End point of the last strategy rect
 
-									startegy_mat.push([s_point, e_point,soFar2[jsondata[framEnd].ClassNum]]);
+									startegy_mat.push([s_point, e_point,soFar2[jsondata[framEnd].ClassNum[0]]]);
 									soFar2 = [0,0,0,0,0,0,0,0,0,0,0];
 
 									for (var fake_counter = 1; fake_counter < 11; fake_counter++){
-										if (fake_counter != jsondata[framEnd].ClassNum){
+										if (fake_counter != jsondata[framEnd].ClassNum[0]){
 									var fake = {
 									"DocNum": "Topic Change",
 									"tags": [],
-									"ClassNum": fake_counter, 
+									"ClassNum": [fake_counter], 
 									"stepHeight": -10000,
 									"Time": jsondata[framEnd+1].Time - 20,  
 									"Duration": 20,
@@ -1994,7 +1985,7 @@
 				
 			chart.plotArea.selectAll(".pattern_icon") 
 					.attr("x", function(d){
-					 return xz(d.target.x) - 30;   // icon svg size
+					 return xz(d.target.x) - 20/2;   // icon svg size
 					})
 					.attr("opacity", function(d){
 						if ((xz(d.target.x)) == 0){
@@ -2007,23 +1998,12 @@
 						}
 					});
 
-			// .attr("x",function(d,i){return chart.xScale(d.target.x);})
-			// .attr("width",  function(d,i){
-			// 	var yTarget = chart.yScale(d.source.y);
-			// 	var ySource = chart.yScale(d.target.y);
-			// 	var xTarget = chart.xScale(d.source.x);
-			// 	var xSource = chart.xScale(d.target.x);
-			// 	return Math.abs(xTarget - xSource)})
+					
+			// chart.plotArea.selectAll(".hover_boxes") 
+			// 		.attr("x", function(d){
+			// 		 return xz(d.source.x);   // icon svg size
+			// })
 
-			chart.plotArea.selectAll(".box") 
-					.attr("x", function(d){return xz(d.target.x);})
-					.attr("width",  function(d,i){
-						var yTarget = chart.yScale(d.source.y);
-						var ySource = chart.yScale(d.target.y);
-						var xTarget = xz(d.source.x);
-						var xSource = xz(d.target.x);
-						return Math.abs(xTarget - xSource)});
-					//.attr('width')
 	}
 				
 	function initializeChart() {
@@ -2039,7 +2019,7 @@
 			chart.plotArea.on("mousemove", function() {
 			var mousePos = d3.mouse(this);
 			chart.xMarker.attr("transform", "translate(" + (mousePos[0] - 7) + ", " + 0 + ")");
-			d3.selectAll(".timeLine").attr("transform", "translate(" + (mousePos[0]) - 3 + ", " + 0 + ")");
+			d3.selectAll(".timeLine").attr("transform", "translate(" + (mousePos[0]) + ", " + 0 + ")");
 			chart.xMarker.selectAll("text").text("Time: " + (chart.xScale.invert(mousePos[0]) + chart.xScale.invert(-time_cover) ).toFixed(2));
 			});
 			
@@ -2050,11 +2030,11 @@
 			// console.log(time_cover, chart.xScale.invert(-time_cover))
 			var time1 = chart.xScale.invert(mousePos[0])/zoom_level + chart.xScale.invert(-time_cover);
 			chart.xMarker.attr("transform", "translate(" + (mousePos[0] - 7) + ", " + 0 + ")");
-			d3.selectAll(".timeLine").attr("transform", "translate(" + (mousePos[0] - 3) + ", " + 0 + ")");
+			d3.selectAll(".timeLine").attr("transform", "translate(" + (mousePos[0] ) + ", " + 0 + ")");
 			if (60*(time1 - Math.floor(time1)) > 9) {
-				chart.xMarker.selectAll("text").text("Time: " + Math.floor(time1) + ":" + (60*(time1 - Math.floor(time1))).toFixed());
+			chart.xMarker.selectAll("text").text("Time: " + Math.floor(time1) + ":" + (60*(time1 - Math.floor(time1))).toFixed());
 			}else{
-				chart.xMarker.selectAll("text").text("Time: " + Math.floor(time1) + ":0" + (60*(time1 - Math.floor(time1))).toFixed());
+			chart.xMarker.selectAll("text").text("Time: " + Math.floor(time1) + ":0" + (60*(time1 - Math.floor(time1))).toFixed());
 			}
 			
 			})
@@ -2086,14 +2066,14 @@
 			});
 
 		zoom = d3.zoom()
-					.scaleExtent([1, 8])
+					.scaleExtent([1, 10])
 					.translateExtent([[0, -Infinity], [width, Infinity]])
 					.on("zoom", zoomed);
 					
 		
 		zoomRect = chart.append("rect")
 			.attr('class', 'zoom_rect')
-			.attr("width", width - margin.left - margin.right)
+			.attr("width", width)
 			.attr("height", height)
 			.attr("fill", "none")
 			.attr("pointer-events", "all")
@@ -2110,21 +2090,14 @@
 			})
 			.on("mousemove", function() {
 			var mousePos = d3.mouse(this);
-			chart.xMarker.attr("transform", "translate(" + (mousePos[0] - 10- margin.left) + ", " + 0 + ")");
-			d3.selectAll(".timeLine").attr("transform", "translate(" + (mousePos[0] - margin.left - 3) + ", " + 0 + ")");
+			chart.xMarker.attr("transform", "translate(" + (mousePos[0] - 7 - margin.left -2 ) + ", " + 0 + ")");
+			d3.selectAll(".timeLine").attr("transform", "translate(" + (mousePos[0] - margin.left - 2) + ", " + 0 + ")");
 			
 			// var xxz = d3.event.transform.rescaleX(xScale_zoom);
 			// console.log((mousePos[0]),xxz((mousePos[0])))
 			//zoom_level = d3.event.transform
 			//console.log((chart.xScale.invert(mousePos[0]), d3.event.transform, time_cover / 600))
-			// chart.xMarker.selectAll("text").text("Time: " + ( chart.xScale.invert(mousePos[0])/zoom_level + chart.xScale.invert(-time_cover)).toFixed(2) );
-			
-			var time1 = chart.xScale.invert(mousePos[0] - margin.left)/zoom_level + chart.xScale.invert(-time_cover);
-			if (60*(time1 - Math.floor(time1)) > 9) {
-				chart.xMarker.selectAll("text").text("Time: " + Math.floor(time1) + ":" + (60*(time1 - Math.floor(time1))).toFixed());
-			}else{
-				chart.xMarker.selectAll("text").text("Time: " + Math.floor(time1) + ":0" + (60*(time1 - Math.floor(time1))).toFixed());
-			}
+			chart.xMarker.selectAll("text").text("Time: " + ( chart.xScale.invert(mousePos[0])/zoom_level + chart.xScale.invert(-time_cover)).toFixed(2) );
 			});
 			
 			chart.selectAll(".zoom_rect").moveToBack();
@@ -2140,12 +2113,11 @@
 		var data = [];	    
 		var data2 = [];
 		
-		// if (source5 == "-UModel-"){
-		// 	var new_jsonfile = "./data/NewIDs" + source5 + "/Dataset_" + array[0] + "/UserInteractions/" + array[1] + "_" + source2 + "_InteractionsLogs.json"; // .toString()
-		// }else{
-		// 	var new_jsonfile = "./data/NewIDs" + source5 + source6 + "/Dataset_" + array[0] + "/UserInteractions/" + array[1] + "_" + source2 + "_InteractionsLogs.json"; // .toString()
-		// }
-		var new_jsonfile = "./data/new_datasets/Dataset_" + array[0] + "/UserInteractions/"+ array[1] + "_" + source2 + "_InteractionsLogs.json";
+		if (source5 == "-UModel-"){
+			var new_jsonfile = "./prov/data/NewIDs" + source5 + "/Dataset_" + array[0] + "/UserInteractions/" + array[1] + "_" + source2 + "_InteractionsLogs.json"; // .toString()
+		}else{
+			var new_jsonfile = "./prov/data/NewIDs" + source5 + source6 + "/Dataset_" + array[0] + "/UserInteractions/" + array[1] + "_" + source2 + "_InteractionsLogs.json"; // .toString()
+		}
 
 		var count = 0;	
 		var count1 = 0;	
@@ -2284,12 +2256,11 @@
 		}
 		var data = [];	    		
 		
-		// if (source5 == "-UModel-"){
-		// 	var new_jsonfile = "./data/NewIDs" + source5 + "/Dataset_" + array[0] + "/UserInteractions/" + array[1] + "_" + source2 + "_InteractionsLogs.json"; // .toString()
-		// }else{
-		// 	var new_jsonfile = "./data/NewIDs" + source5 + source6 + "/Dataset_" + array[0] + "/UserInteractions/" + array[1] + "_" + source2 + "_InteractionsLogs.json"; // .toString()
-		// }
-		var new_jsonfile = "./data/new_datasets/Dataset_" + array[0] + "/UserInteractions/" + array[1] + "_" + source2 + "_InteractionsLogs.json";		
+		if (source5 == "-UModel-"){
+			var new_jsonfile = "./prov/data/NewIDs" + source5 + "/Dataset_" + array[0] + "/UserInteractions/" + array[1] + "_" + source2 + "_InteractionsLogs.json"; // .toString()
+		}else{
+			var new_jsonfile = "./prov/data/NewIDs" + source5 + source6 + "/Dataset_" + array[0] + "/UserInteractions/" + array[1] + "_" + source2 + "_InteractionsLogs.json"; // .toString()
+		}
 
 		var count = 0;										
 		var count1 = 0;										
@@ -2410,8 +2381,8 @@
 	function makeWordTags(){
 
 		tags = d3.select("#WordListsDiv").append("svg")
-			.attr("width", width - margin.left)   // + textRoom
-			.attr("height",keywords_Height + 50) 
+			.attr("width", width + textRoom) 
+			.attr("height",keywords_Height) 
 			.attr("transform", "translate( " + margin.left + ", 0)")
 			.on("click", function(d){   // Cancel singling
 
@@ -2506,10 +2477,10 @@
 			});
 			// ------------------------------------- Keywords and boxes ---------------------------------------
 			
-			tagPos = chartWidth/2 - source4*75;
+			tagPos = chartWidth/2 - source4*50;
 
 			for (var count_all = 0; count_all < source4; count_all++){   
-			    boundingBox[count_all] = (tagPos + count_all*wordtags_width);  //110);
+			    boundingBox[count_all] = (tagPos + count_all*110);
 	        }
 
 			for (var kk = 0; kk<source4; kk++){   
@@ -2518,7 +2489,7 @@
 				d3.selectAll(".recttag-" + kk.toString()).attr("transform", "translate( " + newBoxPosX_ + "," + prevBoxPosY[kk]+ " )");
 				d3.selectAll(".wordtag-"+kk.toString()).attr("transform", "translate( " + newBoxPosX_ + "," + prevBoxPosY[kk]+ " )");
 
-				newBoxPosX_ = newBoxPosX_ + wordtags_width*kk; //110*kk;
+				newBoxPosX_ = newBoxPosX_ + 110*kk;
 				boundingBox[kk] = newBoxPosX_;
 
 		    }
@@ -2584,13 +2555,12 @@
 			});
 		chart.plotArea.selectAll(".pattern_icon")
 			.attr("x", function(d){
-				return chart.xScale(d.target.x) - 30;   // icon svg size
+				return chart.xScale(d.target.x) - 20/2;   // icon svg size
 			});
 
 		chart.plotArea.selectAll(".pattern_icon")
 			 .attr("y", function(d, i){
-			 	y_pos = ( chart.yScale(d.target.y) + chart.yScale(d.source.y) )/2 - 30
-				return y_pos;
+				return chart.yScale(d.target.y);
 			  });
 
 		chart.plotArea.selectAll(".talks")
@@ -2679,7 +2649,7 @@
 			.style("font-size", "15px")
 			.text("Time: 0 min");
 
-		d3.xml("./styles/timer.svg").mimeType("image/svg+xml").get(function(error, xml) {
+		d3.xml("./prov/styles/timer.svg").mimeType("image/svg+xml").get(function(error, xml) {
 		   if (error) throw error;
 		   var svgElem = chart.xMarker.node().appendChild(xml.documentElement);
 			 d3.select(svgElem)
@@ -2701,7 +2671,6 @@
 			.style("stroke-width", 2)
 			.style("opacity", .3)
 			.style("stroke", "red");
-			
 
 		// y axis labels
 			chart.yScale = d3.scaleLinear();
@@ -2963,8 +2932,7 @@
 			 chart.plotArea.selectAll(".pattern_icon")
 			 .attr("y", function(d, i){
 			 if (d.isSel == 1){
-			 	y_pos = ( chart.yScale(d.target.y) + chart.yScale(d.source.y) )/2 - 30
-				return y_pos;}
+				return chart.yScale(d.target.y);}
 			 });
 			}
 			// ----------------------------- Interaction pattern Icons -----------------------
@@ -3037,11 +3005,7 @@
 				.style("stroke", function(d){return d.color;});
 		} else if (hovering == 3) {         //--------------- on box over: 3
 			chart.plotArea.selectAll(".t-" + num.toString()).filter("path#tag-" + num_2.toString()) //
-				.style("stroke",function(d){
-					if (d.color == "#d62728")
-					return "blue";
-					else return "red";
-				}) 
+				.style("stroke",function(d){return "red";}) 
 				// .style("opacity", 1.0);
 		} else if (hovering == 4) {         //--------------- on box out: 4
 			chart.plotArea.selectAll(".t-" + num.toString()).filter("path#tag-" + num_2.toString()) //
@@ -3122,7 +3086,6 @@
 	function drawBoxes(classInfo,num){
 
 		dataIn = classInfo[num]
-		console.log("---------------------->>",num)
 
 		var makeData2 = [];
 
@@ -3137,23 +3100,21 @@
 					Time: dataIn[i].Time,
 					DocNum: dataIn[i].DocNum,
 					tags : dataIn[i].tags,
-					paintIt: dataIn[i].myColor1
-					//link: makeData2[i]
+					paintIt: dataIn[i].myColor1,
+					link: makeData2[i]
 				})
 			}
 		}
 
+		xz = d3.event.transform.rescaleX(xScale_zoom);
+		
 		var boxes = chart.plotArea.append("g").attr("class", "hover_boxes")
 			.selectAll("rect")
-			.enter().append("g").attr("class", "hover_boxes")
+			.enter().append("g").attr("class", "testboxes")
 			.data(makeData2).enter().append("rect")
-			.filter(function(d) { 
-				if ((d.target.y > 0 ) | (d.source.y > 0)) return d
-				})
-			.attr("class", "box " + "-"+num.toString())   // This "class" is the thread number
+			.attr("class", "box" + "-"+num.toString())   // This "class" is the thread number
 			.attr("id", function(d,i){ return 'tag-'+ i }) // assign ID // This "id" is the segment number
-			.style("fill","none")
-			.attr("stroke", "none")
+			.style("fill", "none")
 			.attr("height", function(d,i){
 			  
 				var this_height;
@@ -3161,9 +3122,9 @@
 				var ySource = chart.yScale(d.target.y);
 				var xTarget = chart.xScale(d.source.x);
 				var xSource = chart.xScale(d.target.x);
-					if (topicThreads > 2) {this_height = (Math.abs(yTarget - ySource) + 1/2*height);}
+					if (topicThreads > 2) {this_height = (Math.abs(yTarget - ySource) + 2*height)}
 					else {this_height = (Math.abs(yTarget - ySource) + 400)}
-			 	return this_height; })
+				return this_height; })
 			.attr("width",  function(d,i){
 				var yTarget = chart.yScale(d.source.y);
 				var ySource = chart.yScale(d.target.y);
@@ -3172,96 +3133,30 @@
 				return Math.abs(xTarget - xSource)})
 			.attr("y",function(d,i){
 				var this_y;
-				
-				var this_height;
-				var yTarget = chart.yScale(d.source.y);
-				var ySource = chart.yScale(d.target.y);
-				var xTarget = chart.xScale(d.source.x);
-				var xSource = chart.xScale(d.target.x);
-
-					if (topicThreads > 2) {
-						this_y = ((chart.yScale(d.source.y)));
-						this_height = (Math.abs(yTarget - ySource) + 1/2*height);
-					}
+					if (topicThreads > 2) {this_y = ((chart.yScale(d.source.y) - height));}
 					else {this_y = (chart.yScale(d.source.y) - 200);}
-			return this_y - this_height/2;})  
+			return this_y;})  
 			.attr("x",function(d,i){return chart.xScale(d.target.x);})
 			.on("mouseover", function(d,j) {
-				 console.log("---------------------->> mouse over")
 				 box_num_1 = d3.select(this).attr('class').split("-")[1]
 				 box_num_2 = d3.select(this).attr('id').split("-")[1]
-				 tooltip(d)
-					 hoverSegLines(3, box_num_1,box_num_2);
-				if ( (singling > 0) &  (singling == (Number(box_num_1) + 1))){  
-					 console.log(d.target.y, d.source.y)
+
+				if ( (singling > 0) &  (singling == (Number(box_num_1) + 1)) & (d.source.y > d.target.y) ){
 					 tooltip(d)
 					 hoverSegLines(3, box_num_1,box_num_2);
-				}
-
-			num_ = d3.select(this).attr('class').split("-")[1]
-				num_2 = d3.select(this).attr('id').split("-")[1]
-				 // console.log("ID", num_)
-				 // console.log("Itag", num_2)
-				if (singling == 0){
-					// hoverSegLines(1, num_,num_2);   // on mouse over: 1
-
-				chart.selectAll(".list").remove();
-				
-				wordList.append("g")
-					.attr("class", "list")   
-					.each(function (d,i){
-						if (i == num_ - 1){
-						for (var j = 0; j < 10; j++) {
-						if (d.keywords[j]==null)
-							continue;
-						d3.select(this).append("text")
-							.text(function(){
-								var tempp = d.keywords[j] 
-								return tempp[0];
-							})
-							.attr("fill", color(topic_pointer[num_ - 1]))
-							.attr("dy", ()=> {
-								var yP = j ? (2.0*j + 2.0).toString()+"em" : "2.0em";
-								return yP;
-							})
-							.attr("x", 120)
-							.attr("text-anchor", "middle")
-							.attr("font-size", 22)
-							.attr("class", "tspan" + j)
-							.on("mouseover", (d2) => {
-								var chosenWords = wordtags.selectAll("text").filter((di)=>{
-									if (di.substring(0, 6) == d2.substring(0, 6)){
-										return true;
-									}
-								});
-								chosenWords.attr("fill", "yellow");//.attr("font-style", "oblique").attr("font-size", 30);
-							})
-							.on("mouseout", (d2) => {
-								var chosenWords = wordtags.selectAll("text").filter((di)=>{
-									if (di.substring(0, 6) == d2.substring(0, 6)){
-										return true;
-									}
-								});
-								chosenWords.attr("fill", "black");//.attr("font-style", "normal").attr("font-size", 18);
-							});
-						}}})
-				.attr("transform", "translate( " + (chartWidth+25) + ", 70)");
-
 				}
 
 			})
 			.on("mouseout", function(d,j) {
 				 box_num_1 = d3.select(this).attr('class').split("-")[1]
 				 box_num_2 = d3.select(this).attr('id').split("-")[1]
-				 hoverSegLines(4, box_num_1,box_num_2);   // mouse out on singling: 4	
 					if ( (singling > 0) &  (singling == (Number(box_num_1) + 1)) ){
 					 hoverSegLines(4, box_num_1,box_num_2);   // mouse out on singling: 4
 					}
 				div1.transition()
 					.duration(300)
 					.style("opacity", 0);
-			})
-			// .call(zoom);
+			});
 	}
 
 	function drawIcons(makeData2,num){
@@ -3273,8 +3168,8 @@
 			line.append("g").selectAll(".pattIcon") 
 				.data(makeData2).enter().append('image')
 				.attr("class", "pattern_icon")
-				.each(function(d){  //  (d.source.y > d.target.y) & 
-						if (( (highlightInteract == d.InteractionType) || (noteInteract == d.InteractionType) ||  (searchInteract == d.InteractionType) || (ceartNoteInteract == d.InteractionType) || (openDocInteract == d.InteractionType) ) ) {
+				.each(function(d){
+						if ( (d.source.y > d.target.y) & ( (highlightInteract == d.InteractionType) || (noteInteract == d.InteractionType) ||  (searchInteract == d.InteractionType) || (ceartNoteInteract == d.InteractionType) || (openDocInteract == d.InteractionType) ) ) {
 							d.isSel = true;
 							// console.log("+++++++++++++", d.InteractionType)
 						} else if (d.InteractionType.split("")[0] == "f") {
@@ -3293,7 +3188,7 @@
 					if (svgfile.split("")[0] == "f") {
 						svgfile = ""
 					}
-					return "./styles/"+ svgfile + ".svg";}
+					return "./prov/styles/"+ svgfile + ".svg";}
 					) 
 				.attr('height', '30')
 				.attr('width', '30')
@@ -3308,7 +3203,7 @@
 					if (target_ < 0) {
 						target_ = 0;
 					}
-
+				
 				return ( (chart.yScale(target_) + chart.yScale(source_))/2 - 15 -15);})
 				.attr("opacity", function(d){
 					if ((chart.xScale(d.target.x) - 15 -15) == 0){
@@ -3335,12 +3230,11 @@
 
 	function thinkaloud(){
 
-		// if (source5 == "-UModel-"){
-		// var new_jsonfile = "./data/NewIDs" + source5 + "/Dataset_" + array[0] + "/UserInteractions/" + array[1] + "_" + source2 + "_InteractionsLogs.json"; // .toString()
-		// }else{
-		// var new_jsonfile = "./data/NewIDs" + source5 + source6 + "/Dataset_" + array[0] + "/UserInteractions/" + array[1] + "_" + source2 + "_InteractionsLogs.json"; // .toString()
-		// }
-				var new_jsonfile = "./data/new_datasets/Dataset_" + array[0] + "/UserInteractions/"+ array[1] + "_" + source2 + "_InteractionsLogs.json";
+		if (source5 == "-UModel-"){
+		var new_jsonfile = "./prov/data/NewIDs" + source5 + "/Dataset_" + array[0] + "/UserInteractions/" + array[1] + "_" + source2 + "_InteractionsLogs.json"; // .toString()
+		}else{
+		var new_jsonfile = "./prov/data/NewIDs" + source5 + source6 + "/Dataset_" + array[0] + "/UserInteractions/" + array[1] + "_" + source2 + "_InteractionsLogs.json"; // .toString()
+		}
 
 		var count = 0;											
 		var count1 = 0;											
@@ -3414,6 +3308,7 @@
 
 		var selectBox = parseInt(d3.select(this).attr('class').split("-")[1]);
 
+
 		newBoxPosX = prevBoxPosX[selectBox] + (d3.event.x) -  prevMousePosX;
 		newBoxPosY =  prevBoxPosY[selectBox] + (d3.event.y) - prevMousePosY;
 
@@ -3427,13 +3322,13 @@
 
 		  prevBoxPosX[selectBox] = newBoxPosX;
 		  prevBoxPosY[selectBox] = newBoxPosY;
-		  newPosBox = newBoxPosX + wordtags_width*selectBox; // 110*selectBox;
+		  newPosBox = newBoxPosX + 110*selectBox;
 		  boundingBox[selectBox] = newPosBox;
 
 		  for (var check_bounding = 0; check_bounding < source4; check_bounding++){ 
 
-			  if ( (check_bounding != selectBox) & ((((newPosBox) > boundingBox[check_bounding]) & ((newPosBox)< (boundingBox[check_bounding]+ wordtags_width*0.8))) | (((newPosBox + wordtags_width*0.8) > boundingBox[check_bounding]) & ((newPosBox + wordtags_width*0.8) < (boundingBox[check_bounding]+ wordtags_width*0.8)))  )  ) {
-   // + 100
+			  if ( (check_bounding != selectBox) & ((((newPosBox) > boundingBox[check_bounding]) & ((newPosBox)< (boundingBox[check_bounding]+ 100))) | (((newPosBox + 100) > boundingBox[check_bounding]) & ((newPosBox + 100) < (boundingBox[check_bounding]+ 100)))  )  ) {
+
 				  d3.select(this).attr("stroke", "red")
 				  d3.select(this).attr("stroke-width", "10")
 
@@ -3525,11 +3420,7 @@
 
 			line.selectAll(".testCurves")
 			.enter().append("g").attr("class", "testCurves")
-			.data(makeData2).enter()
-			.filter(function(d) { 
-				if ((d.target.y > 0 ) | (d.source.y > 0)) return d
-				})
-			.append("path")
+			.data(makeData2).enter().append("path")
 			.attr("class", "tCurves " + "t-"+num.toString())   // This "class" is the thread number
 			.style("stroke", function(d,i) {
 				d.color = color(num-1);
@@ -3537,8 +3428,7 @@
 				return color(num-1);
 			})
 			.attr("id", function(d,i){ return 'tag-'+ i }) 			// assign ID // This "id" is the segment number
-			.style("fill", "white")
-			.style("fill-opacity", 0.1)
+			.style("fill", "none")
 			.attr("stroke-linecap", "round")
 			.attr("d", function link(d) {
 				var ySource = chart.yScale(d.source.y);
@@ -3621,7 +3511,7 @@
 										return true;
 									}
 								});
-								chosenWords.attr("fill", "yellow");//.attr("font-style", "oblique").attr("font-size", 30);
+								chosenWords.attr("fill", "yellow").attr("font-style", "oblique").attr("font-size", 30);
 							})
 							.on("mouseout", (d2) => {
 								var chosenWords = wordtags.selectAll("text").filter((di)=>{
@@ -3629,7 +3519,7 @@
 										return true;
 									}
 								});
-								chosenWords.attr("fill", "black");//.attr("font-style", "normal").attr("font-size", 18);
+								chosenWords.attr("fill", "black").attr("font-style", "normal").attr("font-size", 18);
 							});
 						}}})
 				.attr("transform", "translate( " + (chartWidth+25) + ", 70)");
@@ -3706,7 +3596,7 @@
 										return true;
 									}
 								});
-								chosenWords.attr("fill", "yellow");//.attr("font-style", "oblique").attr("font-size", 30);
+								chosenWords.attr("fill", "yellow").attr("font-style", "oblique").attr("font-size", 30);
 							})
 							.on("mouseout", (d2) => {
 								var chosenWords = wordtags.selectAll("text").filter((di)=>{
@@ -3714,18 +3604,17 @@
 										return true;
 									}
 								});
-								chosenWords.attr("fill", "black");//.attr("font-style", "normal").attr("font-size", 18);
+								chosenWords.attr("fill", "black").attr("font-style", "normal").attr("font-size", 18);
 							});
 						}}})
 				.attr("transform", "translate( " + (chartWidth+25) + ", 70)");
 
 					timer = setTimeout(function(){
-						singling = Number(num_) + 1;
-						console.log("number: ", num_)
-						drawBoxes(classInfo,num_)
-						hoverSegLines(true, num_,num_2);
-						clearTimeout(timer);
-					}, 1);
+					singling = Number(num_) + 1;
+					drawBoxes(classInfo,num_)
+					hoverSegLines(true, num_,num_2);
+					clearTimeout(timer);
+				}, 1);
 
 
 				if (addingFlag){
@@ -3749,7 +3638,6 @@
 		chart.plotArea.selectAll(".pattern_icon").remove();
 		chart.plotArea.selectAll(".wordsBox").remove();  			 // Remove are markers in not checked --- not hide
 		chart.plotArea.selectAll(".words").remove();   				 // Remove are markers in not checked --- not hide
-		chart.selectAll(".box").remove();
 							
 
 	for (var num = 0; num < classIDList.length; num++){
@@ -3776,9 +3664,6 @@
 			}
 
 			drawThreads(makeData2, num);
-
-			drawBoxes(classInfo, num);
-
 
 		}
 	}  
