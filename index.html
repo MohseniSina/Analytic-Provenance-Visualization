@@ -6,237 +6,171 @@
 	<link rel="stylesheet" href="./styles/simple-style.css">
 	<link rel="stylesheet" href="./libraries/font-awesome-4.7.0/css/font-awesome.min.css">
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+	<script src="./libraries/d3.min.js"></script>
+	<script src="./libraries/fisheye.js"></script>
+	<script src="./libraries/rebind.js"></script>
 </head>
-
-<style>
-.track {
-  stroke: #000;
-  stroke-opacity: 0.3;
-  stroke-width: 10px;
-}
-
-div.relative {
-    position: relative;
-    width: 800px;
-    height: 350px;
-    border: 3px solid #73AD21;
-}
-
-div.absolute {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-}
-
-.track-inset {
-  stroke: #ddd;
-  stroke-width: 8px;
-}
-
-.track-overlay {
-  pointer-events: stroke;
-  stroke-width: 50px;
-  cursor: crosshair;
-}
-
-<!-.axis text {
-	font-size: 20px;
-} ->
-
-.tooltip {
-	background: #D791E8;
-}
-</style>
-
 
 <body>
 
+<div id="mySidenav" class="sidenav">
+    <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
 
-<div id="panel" style="z-index:10">
+	<a> Number of Topics
+		<select id="classNum" name="classNum">
+			<option value ="3">3</option>
+			<option value ="4">4</option>
+			<option value ="5">5</option>
+			<option value ="6" selected>6</option>
+			<option value ="7">7</option>
+			<option value ="8">8</option>
+			<option value ="9">9</option>
+			<option value ="10" >10</option>
+		</select>​
+	</a>
 
-  <div id="panelCaller"> Control Panel  &nbsp;  &nbsp;</div>
+	<a> Number of Features
+		<select id="featureNum" name="featureNum">
+			<option value ="3">3</option>
+			<option value ="4">4</option>
+			<option value ="5">5</option>
+			<option value ="6" selected>6</option>
+			<option value ="7">7</option>
+			<option value ="8">8</option>
+			<option value ="9">9</option>
+			<option value ="10" >10</option>
+			<option value ="11" >11</option>
+			<option value ="12" >12</option>
+			<option value ="13" >13</option>
+			<option value ="14" >14</option>
+			<option value ="15" >15</option>
+			<option value ="16" >16</option>
+			<option value ="17" >17</option>
+			<option value ="18" >18</option>
+			<option value ="19" >19</option>
+			<option value ="20" >20</option>
+			<option value ="21" >21</option>
+			<option value ="22" >22</option>
+			<option value ="23" >23</option>
+			<option value ="24" >24</option>
+			<option value ="25" >25</option>
+		</select>​
+	</a>
 
-	<br />
-	<br />
-	<p1> &nbsp; Select a Dataset: </p1>
-	<select id="sources_dataset" name="sources_dataset">
-		<option value = 1,"Arms" selected>Arms Dealing</option>
-		<option value = 2,"Terrorist">Terrorist Activity</option>
-		<option value = 3,"Disappearance">Employees Disappearance</option>
-	</select>​
+	<a> Threads Type
+		<select id="thread_type" name="thread_type">
+			<option value ="topicThread" >Topic Threads</option>
 
-	<br />
-	<br />
+			<option value ="analysistask" selected>Provenance Segmentation</option>
+			<option value ="analysistask2">Provenance Segmentation 2</option>
+		</select>​
+	</a>
 
-	<p1> &nbsp; Select Participant: </p1>
-	<select id="json_sources" name="json_sources">
-		<option value ="P1" selected>P1</option>
-    <option value ="P2">P2</option>
-	<option value ="P3">P3</option>
-	<option value ="P4">P4</option>
-	<option value ="P5">P5</option>
-	<option value ="P6">P6</option>
-	<option value ="P7">P7</option>
-	<option value ="P8">P8</option>
-	</select>​
+	<a> Active Learning
+		<select id="T_Method" name="T_Method">
+			<option value ="80">80</option>
+			<option value ="20" >20</option>
+			<option value ="1" >1</option>
+			<option value ="0" selected>0</option>
+		</select>​
+	</a>
 
-	<br />
-	<br />
-
-	<p3> &nbsp; Number of Topics: </p3>
-	<select id="classNum" name="classNum">
-		<option value ="3">3</option>
-		<option value ="4">4</option>
-		<option value ="5">5</option>
-		<option value ="6" selected>6</option>
-		<option value ="7">7</option>
-		<option value ="8">8</option>
-		<option value ="9">9</option>
-		<option value ="10" >10</option>
-	</select>​
-
-	<br />
-	<br />
-
-	<p3> &nbsp; Number of Features: </p3>
-	<select id="featureNum" name="featureNum">
-		<option value ="3">3</option>
-		<option value ="4">4</option>
-		<option value ="5">5</option>
-		<option value ="6" selected>6</option>
-		<option value ="7">7</option>
-		<option value ="8">8</option>
-		<option value ="9">9</option>
-		<option value ="10" >10</option>
-		<option value ="11" >11</option>
-		<option value ="12" >12</option>
-		<option value ="13" >13</option>
-		<option value ="14" >14</option>
-		<option value ="15" >15</option>
-		<option value ="16" >16</option>
-		<option value ="17" >17</option>
-		<option value ="18" >18</option>
-		<option value ="19" >19</option>
-		<option value ="20" >20</option>
-		<option value ="21" >21</option>
-		<option value ="22" >22</option>
-		<option value ="23" >23</option>
-		<option value ="24" >24</option>
-		<option value ="25" >25</option>
-	</select>​
-
-	<br />
-	<br />
-
-	<p2>  &nbsp; Threads Type: </p2>
-	<select id="thread_type" name="thread_type">
-		<option value ="topicThread" >Topic Threads</option>
-		<!-- <option value ="topicInterest">Topic Interests</option> -->
-		<option value ="analysistask" selected>Provenance Segmentation</option>
-		<option value ="analysistask2">Provenance Segmentation 2</option>
-	</select>​
-
-	<br />
-	<br />
-	<p3>  &nbsp; Active Learning: </p3>
-	<select id="T_Method" name="T_Method">
-		<option value ="80">80</option>
-		<option value ="20" >20</option>
-		<option value ="1" >1</option>
-		<option value ="0" selected>0</option>
-	</select>​
-
-	<!-- <select id="E_Method" name="E_Method">
-		<option value ="NTF"selected>W/Count</option>
-	</select>​ -->
-
-	<br />
-	<br />  &nbsp; Control Pannel:
+	<a> Control Pannel:
 
 		<form name="formSection">
 			<br />
 			<g>
 			<input type="checkbox" id="patternIcons" name="patternIcons">Show Interactions Pattern</br>
 			</g>
-			<!-- <input type="checkbox" id="NarrativeView" name="NarrativeView">Show Narrative Tooltips</br> -->
-			<!-- </g> -->
-			<!-- <g> -->
-			<!-- <input type="checkbox" id="visibility" name="visibility">Show Data Points</br> -->
-			<!-- </g> -->
-			<!-- <g>
-			<input type="checkbox" id="macroMicro" name="macroMicro">Macro/Micro View</br>
-			</g> -->
+
 			<g>
 			<input type="checkbox" id="thinkAloud" name="thinkAloud">Think-aloud Segments</br>
 			</g>
-			<!-- <g> -->
-			<!-- <input type="checkbox" id="ProvSegments" name="ProvSegments">ProvThreads Segments</br> -->
-			<!-- </g> -->
+		</form>
+	</a>
 
-			<!-- &nbsp; Select a Lens: -->
-			<!-- <div id="select-data"></div> -->
-			<!-- </br> -->
-	</form>
+	<a> Select Interactions
+		<form name="InteractSection">
+			<input type="checkbox" id="opens" name="opens">Open Document</br>
+			<input type="checkbox" id="search" name="search">Search </br>
+			<input type="checkbox" id="Highlights" name="Highlights"> Highlight</br>
+			<input type="checkbox" id="Notes" name="Notes" >Writing Notes</br>
+			<input type="checkbox" id="note" name="note" >Make a New Note</br>
+		</form>
+	</a>
 
-	<p2>  &nbsp; Select Interactions: </p2>
-	<form name="InteractSection">
-		</br>
-		<g>
-		<input type="checkbox" id="opens" name="opens" >Open Document</br>
-		</g>
-
-		<g>
-		<input type="checkbox" id="search" name="search">Search </br>
-		</g>
-
-		<g>
-		<input type="checkbox" id="Highlights" name="Highlights"> Highlight</br>
-		<g>
-
-		<g>
-		<input type="checkbox" id="Notes" name="Notes" >Writing Notes</br>
-		<g>
-
-		<g>
-		<input type="checkbox" id="connections" name="connections" >Linking Documents</br>
-		<g>
-
-		<g>
-		<input type="checkbox" id="note" name="note" >Make a New Note</br>
-		</g>
-		</br>
-	</form>
-
-	</br>
-	<!-- </br>
-		<div id="Slider1Div"></div>
-	</br> -->
-	</br>
-		<div id="Slider2Div"></div>
-
-	</br>
-	</br>
+	<a2>Merging Segments Threshold
+		<div id="Slider2Div"></div> </a2>
+	<a onclick="saveIt()"> Time Segments </a>
+	<a onclick="saveIt2()"> Segmentation Error</a>
 	
-	&nbsp; Time Segments:  <input type="button" value="Download" onclick="saveIt()"> 
-	</br>
-	</br>
-	&nbsp;  Segmentation Error:  <input type="button" value="Download" onclick="saveIt2()">
-	
-    </br>
-	</br>
-	</br>
-	</br>
-</div>
+	</div>	
 
-<br />
-<br />
+	<div id="openNav_data" class="sidenav">
+	  <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+
+	  <a style="padding-top: 50px"> Dataset: 
+		  <select id="sources_dataset" name="sources_dataset">
+			<option value = 1,"Arms" selected>Arms Dealing</option>
+			<option value = 2,"Terrorist">Terrorist Activity</option>
+			<option value = 3,"Disappearance">Employees Disappearance</option>
+		</select>​
+		</a>
+	<a style="padding-top: 50px"> Participant:
+		<select id="json_sources" name="json_sources">
+			<option value ="P1" selected>P1</option>
+		    <option value ="P2">P2</option>
+			<option value ="P3">P3</option>
+			<option value ="P4">P4</option>
+			<option value ="P5">P5</option>
+			<option value ="P6">P6</option>
+			<option value ="P7">P7</option>
+			<option value ="P8">P8</option>
+		</select>​
+	</a>
+	</div>	  
+
+   <div id="main">
+	<div class="navbar">
+	  
+	  <a href="http://indie.arch.tamu.edu/" target="_blank" style = "padding-left:30px; padding-right:10px; padding-top:2px; padding-bottom:0px; " >
+	  <img src="./styles/INDIE.PNG" width="62" height="30" >
+	   <logo> INIDE Lab </logo>
+	  </a>
+
+	  <a href="https://research.arch.tamu.edu/analytic-provenance/" target="_blank" style="float: right;">Analytic Provenance Group</a>
+	  <a onclick="openNav_data()"> Provenance Data </a>
+	  <a onclick="openNav()"> Control Pannel </a>
+    </div> 
+
+
 	
+	<!-- End of forms -->
 	<div id="chartDiv"></div>	
 	<div id="WordListsDiv"></div>
+</div>
+	
 
-	<script src="./libraries/d3.min.js"></script>
-	<script src="./libraries/fisheye.js"></script>
-	<script src="./libraries/rebind.js"></script>
+
+
+<script>
+function openNav() {
+    document.getElementById("mySidenav").style.width = "350px";
+    document.getElementById("main").style.marginLeft = "350px";
+}
+
+function openNav_data() {
+    document.getElementById("openNav_data").style.width = "350px";
+    document.getElementById("main").style.marginLeft = "350px";
+}
+
+function closeNav() {
+    document.getElementById("mySidenav").style.width = "0";
+    document.getElementById("openNav_data").style.width = "0";
+    document.getElementById("main").style.marginLeft= "0";
+}
+</script>
+
 	<script src="./scripts/main.js"></script>
 
 </body>

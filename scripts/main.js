@@ -20,10 +20,14 @@
 	var flyIt;
 	var wordList
 	var wordListPos = 90
-	var margin = { top: 10, right: 200, bottom: 60, left: 80 };
+	var margin = { top: 10, right: 120, bottom: 60, left: 10 };
+	var textRoom = 50;
 	var width = 1000;
 	var height = 600;
+<<<<<<< HEAD
 	var textRoom = 400;
+=======
+>>>>>>> c02b9131b0263d821d1fa25aee011c80314a811a
 	var keywords_Height = 300;
 	var keywords_width = 2000;
     var magicNumber = 1;
@@ -539,11 +543,14 @@
 			topicThreads = 2;
 		}   
 
+<<<<<<< HEAD
 		// if (source5 == "-UModel-"){
 		// var jsonfile = "./data/NewIDs" + source5 + "/Dataset_" + array[0] + "/ProvThreads/" + array[1] + "_" + source2 + "_" + source3 + "_" + source4 + ".json"; // .toString()	
 		// }else{
 		// var jsonfile = "./data/NewIDs" + source5 + source6 + "/Dataset_" + array[0] + "/ProvThreads/" + array[1] + "_" + source2 + "_" + source3 + "_" + source4 + ".json"; // .toString()
 		// }
+=======
+>>>>>>> c02b9131b0263d821d1fa25aee011c80314a811a
 		var jsonfile = "./data/new_datasets/Dataset_" + array[0] + "/ProvThreads/" +source5+ "/" + source6 + "/" + array[1] + "_" + source2 + "_" + source3 + "_" + source4 + ".json";
 		console.log(jsonfile);
 
@@ -562,7 +569,7 @@
 			// ----------------------------- Creat slider/Combobox/FlagButtons only in first run ---------------------
 				
 				if (init_chart == 1){
-					
+
 					init_chart = false
 					
 					topic_pointer == [0,1,2,3,4,5,6,7,8,9,10];   // restart the topic pointers !
@@ -571,10 +578,10 @@
 					chartHeight = height - margin.top - margin.bottom;
 					sliderWidth = (width * 0.4) - margin.left - margin.right;
 					sliderHeight = 90;
-					sliderWidth2 = (width * 0.6) - margin.left - margin.right;
+					sliderWidth2 = 300; //(width * 0.3) - margin.left - margin.right;
 					sliderHeight2 = 90;
-					sliderWidth3 = (width * 0.6) - margin.left - margin.right;
-					sliderHeight3 = 90;
+					sliderWidth3 = 300; // (width * 0.6) - margin.left - margin.right;
+					sliderHeight3 = 50;
 					new_chartWidth1 = chartWidth;
 					new_chartWidth2 = chartWidth;
 
@@ -585,13 +592,13 @@
 					createAxes();
 
 					makeWordTags();
+
+					updateWindow();  
+
 				}
 
-				// ------------------------- Read data, Create array of threads ------------------------
 				
-				makeDynamicArray(topic_pointer, original_data);
 				
-				drawIt()				
 
 				// ------------------------- Create Axes and etc at every redraw ------------------------
 				// -----------------------------Drawing lines for each class -----------------------------------
@@ -603,16 +610,32 @@
 						tags.selectAll(".wordtag").remove();
 						tags.selectAll(".recttag").remove();
 					}  
-				
-					wordTags();
-					
-					drawIt(); 
-					chartWidth =  new_chartWidth1;
-					chart.attr("width", new_chartWidth2);
-					updateWindow();  
+					wordTags();			
+						
+				// // ------------------------- Read data, Create array of threads ------------------------
+				// makeDynamicArray(topic_pointer, original_data);
+				// drawIt()	
 					
 					if (evaluation == 1) {thinkaloud();}
 					flag = 1;   // a flag to show "done with all drawings"
+
+					updateWindow();  
+
+					 // -------------- Animated zoom in ---------------
+
+				      var d0 = dataXRange.min; 
+			          d1 = dataXRange.max / 2; 
+
+			      xScale_zoom = chart.xScale
+							.domain([dataXRange.min , dataXRange.max])
+							.range([0, chartWidth - textRoom]);
+
+			      chart.transition().duration(1000)
+			      .call(zoom.transform, d3.zoomIdentity
+			          .scale(chartWidth / (xScale_zoom(d1) - xScale_zoom(d0)))
+			          .translate(-xScale_zoom(d0), 0));
+			          
+
 
 			}
 		});
@@ -793,7 +816,11 @@
 								.attr("x", 120)
 								.attr("text-anchor", "middle")
 								.attr("font-size", 4)
+<<<<<<< HEAD
 								.attr("class", "tspan" + j)
+=======
+								.attr("class", "tspan " + j)
+>>>>>>> c02b9131b0263d821d1fa25aee011c80314a811a
 								.on("mouseover", (d2) => {
 									var chosenWords = wordtags.selectAll("text").filter((di)=>{
 										if (di.substring(0, 6) == d2.substring(0, 6)){
@@ -811,7 +838,7 @@
 									chosenWords.attr("fill", "black"); // .attr("font-style", "normal").attr("font-size", 18);
 								});
 							}}})
-						.attr("transform", "translate( " + (chartWidth+25) + ", 20)");
+						.attr("transform", "translate( " + (chartWidth - margin.right + 10) + ", 80)");
 
 						justClicked = 1
 						for (var kk=0;kk<11;kk++){
@@ -988,7 +1015,11 @@
 				}, 1);
 
 				});
-					
+		
+				chart.plotArea.selectAll(".pattern_icon").moveToFront();
+				// ------------------------- Read data, Create array of threads ------------------------
+				makeDynamicArray(topic_pointer, original_data);
+				drawIt()			
 		});
 
 			updateWidth();
@@ -1937,13 +1968,19 @@
 
 	function updateWindow(){
 		var chart_x = w_size.innerWidth || e_size.clientWidth || g_size.clientWidth;
-		chartWidth = chart_x - margin.left - margin.right;
-		chart.attr("width", chart_x);
-		tags.attr("width", chart_x);
+		
+		chartWidth = chart_x - margin.right - margin.left;
+		
+		chart.attr("width", chartWidth + margin.right);
+		d3.select("bottom_view").attr("width", chartWidth);
+		tags.attr("width", chart_x - margin.left - margin.right);
+		chart.selectAll(".zoom_rect").attr("width", chartWidth - margin.left);
+		chart.selectAll(".tspan").attr("transform", "translate( " + (chartWidth - margin.right + 10) + ", 80)");
+		
 		new_chartWidth1 = chartWidth;
 		new_chartWidth2 = chart_x;
 		
-		zoom.translateExtent([[0, -Infinity], [chartWidth, Infinity]])
+		// zoom.translateExtent([[0, -Infinity], [chartWidth, Infinity]])
 		
 		updateWidth();
 		
@@ -1955,6 +1992,7 @@
 		  // console.log(d3.event.transform.x / d3.event.transform.k)
 		  time_cover = d3.event.transform.x / d3.event.transform.k
 		  zoom_level = d3.event.transform.k
+
 		chart.plotArea.selectAll(".tCurves")
 			.attr("d", function link(d) {
 				var ySource = chart.yScale(d.source.y);
@@ -2028,13 +2066,23 @@
 				
 	function initializeChart() {
 
+
+		zoom = d3.zoom()
+					.scaleExtent([1, 8])
+					.translateExtent([[0, 0], [width, height]])
+					.extent([[0, 0], [width, height]])
+					.on("zoom", zoomed);
+					
+		chart_x = w_size.innerWidth || e_size.clientWidth || g_size.clientWidth; 
 		chart = d3.select("#chartDiv").append("svg")
-			.attr("width", width + textRoom)
-			.attr("height", height);
+			.attr("width", chart_x - margin.left) // width - margin.left - margin.right )  //+ textRoom
+			.attr("height", height)
+			.call(zoom);
 
 		chart.plotArea = chart.append("g")
 			.attr("pointer-events", "all")
-			.attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+			.attr("transform", "translate(" + margin.left + "," + margin.top + ")")
+			// .call(zoom);
 			
 			chart.plotArea.on("mousemove", function() {
 			var mousePos = d3.mouse(this);
@@ -2085,6 +2133,7 @@
 				}
 			});
 
+<<<<<<< HEAD
 		zoom = d3.zoom()
 					.scaleExtent([1, 8])
 					.translateExtent([[0, -Infinity], [width, Infinity]])
@@ -2094,10 +2143,16 @@
 		zoomRect = chart.append("rect")
 			.attr('class', 'zoom_rect')
 			.attr("width", width - margin.left - margin.right)
+=======
+		
+		zoomRect = chart.append("rect")
+			.attr('class', 'zoom_rect')
+			.attr("width", chartWidth)
+>>>>>>> c02b9131b0263d821d1fa25aee011c80314a811a
 			.attr("height", height)
 			.attr("fill", "none")
 			.attr("pointer-events", "all")
-			.call(zoom)
+			// .call(zoom)
 			.on("mouseout", function(d){   // Cancel singling
 				if (singling == 0){
 					for (var kk =0; kk<10;kk++){
@@ -2410,9 +2465,10 @@
 	function makeWordTags(){
 
 		tags = d3.select("#WordListsDiv").append("svg")
-			.attr("width", width - margin.left)   // + textRoom
-			.attr("height",keywords_Height + 50) 
-			.attr("transform", "translate( " + margin.left + ", 0)")
+			.attr("class", "bottom_view")
+			.attr("width", width - margin.right)   // + textRoom
+			.attr("height",keywords_Height + 40) 
+			// .attr("transform", "translate( " + margin.left + ", 0)")
 			.on("click", function(d){   // Cancel singling
 
 				if (justClicked ==0){
@@ -2452,7 +2508,7 @@
 
 		xScale_zoom = chart.xScale
 			.domain([dataXRange.min , dataXRange.max])
-			.range([0, chartWidth]);
+			.range([0, chartWidth - textRoom]);
 
 
 		chart.xAxis.scale(chart.xScale);
@@ -2463,8 +2519,7 @@
 		chart.xLabel
 			.attr("transform", "translate(" + (margin.left + chartWidth / 2.0) + ", " + (chartHeight + margin.top + margin.bottom - axisFont / 2 ) + ")");
 
-		chart.selectAll(".zoom_rect")
-		.attr("width", chartWidth + textRoom );
+
 		
 		chart.selectAll(".zoom_rect").moveToBack();
 			
@@ -2650,7 +2705,7 @@
 		chart.xScale = d3.scaleLinear()
 			.clamp(true)
 			.domain([dataXRange.min, dataXRange.max])  
-			.range([0, chartWidth]);
+			.range([0, chartWidth - textRoom]);
 
 		chart.xAxis = d3.axisBottom(chart.xScale);
 
@@ -2732,7 +2787,7 @@
 	function make2ndSlider(){
 			
 		sliderSVG2 = d3.select("#Slider1Div").append("svg")
-						.attr("width", sliderWidth2 + margin.left + margin.right)
+						.attr("width", sliderWidth2)
 						.attr("height", sliderHeight2);
 
 		var slider2 = sliderSVG2.append("g")
@@ -2798,8 +2853,8 @@
 			 flag = 0;
 			 makeDynamicArray(topic_pointer, original_data);
 			 drawIt(); 
-			 chartWidth =  new_chartWidth1;
-			 chart.attr("width", new_chartWidth2);
+			 // chartWidth =  new_chartWidth1;
+			 // chart.attr("width", new_chartWidth2);
 			 updateWidth();
 			flag = 1;
 		}
@@ -2809,12 +2864,12 @@
 	function make3rdSlider(){
 
 		sliderSVG3 = d3.select("#Slider2Div").append("svg")
-						.attr("width", sliderWidth3 + margin.left + margin.right)
+						.attr("width", sliderWidth3) // + margin.left + margin.right)
 						.attr("height", sliderHeight3);
 	
 		var slider3 = sliderSVG3.append("g")
 			.attr("class", "slider3")
-			.attr("transform", "translate(" + margin.left + "," + sliderHeight3 /2 + ")");
+			.attr("transform", "translate(10," + sliderHeight3 /2 + ")");
 
 		var xSlider_3 = d3.scaleLinear()
 			.domain([0, 5])
@@ -2833,11 +2888,11 @@
 				.on("start.interrupt", function() { slider3.interrupt(); })
 				.on("start drag", function() { hue3(xSlider_3.invert(d3.event.x)); }));
 
-		slider3.append('text')
-		    .attr("fill", "#e6e6ff")
-			.attr("transform", "translate(0, " + -1*sliderHeight2 /4 + ")")
-			.style("font-size", 18 + "px")
-			.text("Merging Segments Time Threshold: ");
+		// slider3.append('text')
+		//     .attr("fill", "#e6e6ff")
+		// 	.attr("transform", "translate(0, " + -1*sliderHeight2 /4 + ")")
+		// 	.style("font-size", 18 + "px")
+		// 	.text("Merging Segments Time Threshold: ");
 
 		slider3.insert("g", ".track-overlay")
 			.attr("class", "ticks")
@@ -2995,8 +3050,8 @@
 		// Draw new threads  -----------
 
 		drawIt();  
-		chartWidth =  new_chartWidth1;
-		chart.attr("width", new_chartWidth2);
+		// chartWidth =  new_chartWidth1;
+		// chart.attr("width", new_chartWidth2);
 		updateWidth();
 
 	}
@@ -3122,7 +3177,11 @@
 	function drawBoxes(classInfo,num){
 
 		dataIn = classInfo[num]
+<<<<<<< HEAD
 		console.log("---------------------->>",num)
+=======
+		// console.log("---------------------->>",num)
+>>>>>>> c02b9131b0263d821d1fa25aee011c80314a811a
 
 		var makeData2 = [];
 
@@ -3154,6 +3213,7 @@
 			.attr("id", function(d,i){ return 'tag-'+ i }) // assign ID // This "id" is the segment number
 			.style("fill","none")
 			.attr("stroke", "none")
+<<<<<<< HEAD
 			.attr("height", function(d,i){
 			  
 				var this_height;
@@ -3164,12 +3224,25 @@
 					if (topicThreads > 2) {this_height = (Math.abs(yTarget - ySource) + 1/2*height);}
 					else {this_height = (Math.abs(yTarget - ySource) + 400)}
 			 	return this_height; })
+=======
+			// .attr("height", function(d,i){
+			// 	var this_height;
+			// 	var yTarget = chart.yScale(d.source.y);
+			// 	var ySource = chart.yScale(d.target.y);
+			// 	var xTarget = chart.xScale(d.source.x);
+			// 	var xSource = chart.xScale(d.target.x);
+			// 		if (topicThreads > 2) {this_height = (Math.abs(yTarget - ySource) + 1/2*height);}
+			// 		else {this_height = (Math.abs(yTarget - ySource) + 400)}
+			//  	return this_height; })
+			.attr("height", function(d,i){return height - 10; })
+>>>>>>> c02b9131b0263d821d1fa25aee011c80314a811a
 			.attr("width",  function(d,i){
 				var yTarget = chart.yScale(d.source.y);
 				var ySource = chart.yScale(d.target.y);
 				var xTarget = chart.xScale(d.source.x);
 				var xSource = chart.xScale(d.target.x);
 				return Math.abs(xTarget - xSource)})
+<<<<<<< HEAD
 			.attr("y",function(d,i){
 				var this_y;
 				
@@ -3188,6 +3261,27 @@
 			.attr("x",function(d,i){return chart.xScale(d.target.x);})
 			.on("mouseover", function(d,j) {
 				 console.log("---------------------->> mouse over")
+=======
+			// .attr("y",function(d,i){
+			// 	var this_y;
+				
+			// 	var this_height;
+			// 	var yTarget = chart.yScale(d.source.y);
+			// 	var ySource = chart.yScale(d.target.y);
+			// 	var xTarget = chart.xScale(d.source.x);
+			// 	var xSource = chart.xScale(d.target.x);
+
+			// 		if (topicThreads > 2) {
+			// 			this_y = ((chart.yScale(d.source.y)));
+			// 			this_height = (Math.abs(yTarget - ySource) + 1/2*height);
+			// 		}
+			// 		else {this_y = (chart.yScale(d.source.y) - 200);}
+			// return this_y - this_height/2;})  
+			.attr("y",5)  
+			.attr("x",function(d,i){return chart.xScale(d.target.x);})
+			.on("mouseover", function(d,j) {
+				 // console.log("---------------------->> mouse over")
+>>>>>>> c02b9131b0263d821d1fa25aee011c80314a811a
 				 box_num_1 = d3.select(this).attr('class').split("-")[1]
 				 box_num_2 = d3.select(this).attr('id').split("-")[1]
 				 tooltip(d)
@@ -3198,7 +3292,11 @@
 					 hoverSegLines(3, box_num_1,box_num_2);
 				}
 
+<<<<<<< HEAD
 			num_ = d3.select(this).attr('class').split("-")[1]
+=======
+				num_ = d3.select(this).attr('class').split("-")[1]
+>>>>>>> c02b9131b0263d821d1fa25aee011c80314a811a
 				num_2 = d3.select(this).attr('id').split("-")[1]
 				 // console.log("ID", num_)
 				 // console.log("Itag", num_2)
@@ -3227,7 +3325,11 @@
 							.attr("x", 120)
 							.attr("text-anchor", "middle")
 							.attr("font-size", 22)
+<<<<<<< HEAD
 							.attr("class", "tspan" + j)
+=======
+							.attr("class", "tspan " + j)
+>>>>>>> c02b9131b0263d821d1fa25aee011c80314a811a
 							.on("mouseover", (d2) => {
 								var chosenWords = wordtags.selectAll("text").filter((di)=>{
 									if (di.substring(0, 6) == d2.substring(0, 6)){
@@ -3245,7 +3347,11 @@
 								chosenWords.attr("fill", "black");//.attr("font-style", "normal").attr("font-size", 18);
 							});
 						}}})
+<<<<<<< HEAD
 				.attr("transform", "translate( " + (chartWidth+25) + ", 70)");
+=======
+				.attr("transform", "translate( " + (chartWidth - margin.right + 10) + ", 80)");
+>>>>>>> c02b9131b0263d821d1fa25aee011c80314a811a
 
 				}
 
@@ -3260,8 +3366,15 @@
 				div1.transition()
 					.duration(300)
 					.style("opacity", 0);
+<<<<<<< HEAD
 			})
 			// .call(zoom);
+=======
+			});
+
+			chart.plotArea.selectAll(".pattern_icon").moveToFront();
+
+>>>>>>> c02b9131b0263d821d1fa25aee011c80314a811a
 	}
 
 	function drawIcons(makeData2,num){
@@ -3614,7 +3727,7 @@
 							.attr("x", 120)
 							.attr("text-anchor", "middle")
 							.attr("font-size", 22)
-							.attr("class", "tspan" + j)
+							.attr("class", "tspan " + j)
 							.on("mouseover", (d2) => {
 								var chosenWords = wordtags.selectAll("text").filter((di)=>{
 									if (di.substring(0, 6) == d2.substring(0, 6)){
@@ -3632,7 +3745,7 @@
 								chosenWords.attr("fill", "black");//.attr("font-style", "normal").attr("font-size", 18);
 							});
 						}}})
-				.attr("transform", "translate( " + (chartWidth+25) + ", 70)");
+				.attr("transform", "translate( " + (chartWidth - margin.right + 10) + ", 80)");
 
 				}
 				if (((singling == 0) | ( (singling > 0) &  (singling == (Number(num_) + 1)) ) ) & ((d.source.y > d.target.y) | (topicThreads !=2) ) ){ 
@@ -3699,7 +3812,7 @@
 							.attr("x", 10)
 							.attr("text-anchor", "middle")
 							.attr("font-size", 22)
-							.attr("class", "tspan" + j)
+							.attr("class", "tspan  " + j)
 							.on("mouseover", (d2) => {
 								var chosenWords = wordtags.selectAll("text").filter((di)=>{
 									if (di.substring(0, 6) == d2.substring(0, 6)){
@@ -3717,7 +3830,7 @@
 								chosenWords.attr("fill", "black");//.attr("font-style", "normal").attr("font-size", 18);
 							});
 						}}})
-				.attr("transform", "translate( " + (chartWidth+25) + ", 70)");
+				.attr("transform", "translate( " + (chartWidth - margin.left + 10) + ", 80)");
 
 					timer = setTimeout(function(){
 						singling = Number(num_) + 1;
