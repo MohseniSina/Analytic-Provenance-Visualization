@@ -21,13 +21,9 @@
 	var wordList
 	var wordListPos = 90
 	var margin = { top: 10, right: 120, bottom: 60, left: 10 };
-	var textRoom = 50;
+	var textRoom = margin.right;
 	var width = 1000;
 	var height = 600;
-<<<<<<< HEAD
-	var textRoom = 400;
-=======
->>>>>>> c02b9131b0263d821d1fa25aee011c80314a811a
 	var keywords_Height = 300;
 	var keywords_width = 2000;
     var magicNumber = 1;
@@ -57,7 +53,7 @@
 	var tooltipOpacity = 1;
 	var curvethread = 1;
 	var time_cover = 0
-	var wordtags_width = 150;
+	var wordtags_width = 130;
 	var wordtags_height = 300;
 
 	var addingFlag = false;
@@ -543,15 +539,7 @@
 			topicThreads = 2;
 		}   
 
-<<<<<<< HEAD
-		// if (source5 == "-UModel-"){
-		// var jsonfile = "./data/NewIDs" + source5 + "/Dataset_" + array[0] + "/ProvThreads/" + array[1] + "_" + source2 + "_" + source3 + "_" + source4 + ".json"; // .toString()	
-		// }else{
-		// var jsonfile = "./data/NewIDs" + source5 + source6 + "/Dataset_" + array[0] + "/ProvThreads/" + array[1] + "_" + source2 + "_" + source3 + "_" + source4 + ".json"; // .toString()
-		// }
-=======
->>>>>>> c02b9131b0263d821d1fa25aee011c80314a811a
-		var jsonfile = "./data/new_datasets/Dataset_" + array[0] + "/ProvThreads/" +source5+ "/" + source6 + "/" + array[1] + "_" + source2 + "_" + source3 + "_" + source4 + ".json";
+		var jsonfile = "./prov/data/new_datasets/Dataset_" + array[0] + "/ProvThreads/" +source5+ "/" + source6 + "/" + array[1] + "_" + source2 + "_" + source3 + "_" + source4 + ".json";
 		console.log(jsonfile);
 
 		d3.json(jsonfile, function(error, json){
@@ -643,13 +631,7 @@
 
 	function wordTags(){
 
-		
-		// if (source5 == "-UModel-"){
-		// var new_jsonfile = "./data/NewIDs" + source5 + "/Dataset_" + array[0] + "/EntitiesList/" + array[1] + "_" + source2 + "_ClassNum" + source4 + ".json"; 
-		// }else{
-		// var new_jsonfile = "./data/NewIDs" + source5 + source6 + "/Dataset_" + array[0] + "/EntitiesList/" + array[1] + "_" + source2 + "_ClassNum" + source4 + ".json";
-		// }
-		var new_jsonfile = "./data/new_datasets/Dataset_" + array[0] + "/cluster_summary/" +source5+ "/" + source6 +"/"+ array[1] + "_" + source2 + "_interaction_" + source4 + ".json";
+		var new_jsonfile = "./prov/data/new_datasets/Dataset_" + array[0] + "/cluster_summary/" +source5+ "/" + source6 +"/"+ array[1] + "_" + source2 + "_interaction_" + source4 + ".json";
 		console.log("word list: ", new_jsonfile)
 
 		var count = 0;
@@ -658,8 +640,8 @@
 		
 
 		for (var kk=0; kk< source4 ;kk++){    				// source4 is Class number
-				oldTagPos = chartWidth/2 - source4*50;
-				prevBoxPosX[kk] = (chartWidth/2 - source4*50 ); 
+				oldTagPos = chartWidth/2 - source4*(wordtags_width/3);
+				prevBoxPosX[kk] = (chartWidth/2 - source4*(wordtags_width/3));  // 50
 				prevBoxPosY[kk] =  (1 + 10); 
 		}
 
@@ -714,7 +696,7 @@
 					.attr("stroke", "none")
 				    .attr("rx", 6)
 					.attr("ry", 6)
-					.attr("x", function(d,i){return (-0 + i*160);}) 
+					.attr("x", function(d,i){return (-0 + i*(wordtags_width*1.07));}) 
 					.attr("y", function(d,i){return 1;})
 					.attr("width",  function(d,i){return wordtags_width})
 					.attr("height",wordtags_height)
@@ -816,11 +798,7 @@
 								.attr("x", 120)
 								.attr("text-anchor", "middle")
 								.attr("font-size", 4)
-<<<<<<< HEAD
-								.attr("class", "tspan" + j)
-=======
 								.attr("class", "tspan " + j)
->>>>>>> c02b9131b0263d821d1fa25aee011c80314a811a
 								.on("mouseover", (d2) => {
 									var chosenWords = wordtags.selectAll("text").filter((di)=>{
 										if (di.substring(0, 6) == d2.substring(0, 6)){
@@ -889,7 +867,7 @@
 								return yP;
 							})
 							
-							.attr("x", i * 160 + 75)
+							.attr("x", i * (wordtags_width*1.07) + (wordtags_width/2))  // 160 + 75)
 							.attr("text-anchor", "middle")
 							.attr("font-size", 15)
 							.attr("class", "tspan-" + j)
@@ -929,7 +907,7 @@
 								var yP = 10 ? (1.8*10 + 1.8).toString()+"em" : "1.8em";
 								return yP;
 							})
-							.attr("x", i * 160 + 75)
+							.attr("x", i * (wordtags_width*1.07) + (wordtags_width/2)) //160 + 75)
 							.attr("text-anchor", "middle")
 							.attr("font-size", 18)
 							.attr("class", "tspan2")
@@ -1971,7 +1949,7 @@
 		
 		chartWidth = chart_x - margin.right - margin.left;
 		
-		chart.attr("width", chartWidth + margin.right);
+		chart.attr("width", chartWidth + margin.right + margin.left);
 		d3.select("bottom_view").attr("width", chartWidth);
 		tags.attr("width", chart_x - margin.left - margin.right);
 		chart.selectAll(".zoom_rect").attr("width", chartWidth - margin.left);
@@ -2075,7 +2053,7 @@
 					
 		chart_x = w_size.innerWidth || e_size.clientWidth || g_size.clientWidth; 
 		chart = d3.select("#chartDiv").append("svg")
-			.attr("width", chart_x - margin.left) // width - margin.left - margin.right )  //+ textRoom
+			.attr("width", chart_x - margin.left- textRoom) // width - margin.left - margin.right )  //+ textRoom
 			.attr("height", height)
 			.call(zoom);
 
@@ -2133,22 +2111,9 @@
 				}
 			});
 
-<<<<<<< HEAD
-		zoom = d3.zoom()
-					.scaleExtent([1, 8])
-					.translateExtent([[0, -Infinity], [width, Infinity]])
-					.on("zoom", zoomed);
-					
-		
-		zoomRect = chart.append("rect")
-			.attr('class', 'zoom_rect')
-			.attr("width", width - margin.left - margin.right)
-=======
-		
 		zoomRect = chart.append("rect")
 			.attr('class', 'zoom_rect')
 			.attr("width", chartWidth)
->>>>>>> c02b9131b0263d821d1fa25aee011c80314a811a
 			.attr("height", height)
 			.attr("fill", "none")
 			.attr("pointer-events", "all")
@@ -2195,12 +2160,7 @@
 		var data = [];	    
 		var data2 = [];
 		
-		// if (source5 == "-UModel-"){
-		// 	var new_jsonfile = "./data/NewIDs" + source5 + "/Dataset_" + array[0] + "/UserInteractions/" + array[1] + "_" + source2 + "_InteractionsLogs.json"; // .toString()
-		// }else{
-		// 	var new_jsonfile = "./data/NewIDs" + source5 + source6 + "/Dataset_" + array[0] + "/UserInteractions/" + array[1] + "_" + source2 + "_InteractionsLogs.json"; // .toString()
-		// }
-		var new_jsonfile = "./data/new_datasets/Dataset_" + array[0] + "/UserInteractions/"+ array[1] + "_" + source2 + "_InteractionsLogs.json";
+		var new_jsonfile = "./prov/data/new_datasets/Dataset_" + array[0] + "/UserInteractions/"+ array[1] + "_" + source2 + "_InteractionsLogs.json";
 
 		var count = 0;	
 		var count1 = 0;	
@@ -2339,12 +2299,7 @@
 		}
 		var data = [];	    		
 		
-		// if (source5 == "-UModel-"){
-		// 	var new_jsonfile = "./data/NewIDs" + source5 + "/Dataset_" + array[0] + "/UserInteractions/" + array[1] + "_" + source2 + "_InteractionsLogs.json"; // .toString()
-		// }else{
-		// 	var new_jsonfile = "./data/NewIDs" + source5 + source6 + "/Dataset_" + array[0] + "/UserInteractions/" + array[1] + "_" + source2 + "_InteractionsLogs.json"; // .toString()
-		// }
-		var new_jsonfile = "./data/new_datasets/Dataset_" + array[0] + "/UserInteractions/" + array[1] + "_" + source2 + "_InteractionsLogs.json";		
+		var new_jsonfile = "./prov/data/new_datasets/Dataset_" + array[0] + "/UserInteractions/" + array[1] + "_" + source2 + "_InteractionsLogs.json";		
 
 		var count = 0;										
 		var count1 = 0;										
@@ -2505,16 +2460,15 @@
 	function updateWidth(){
                // ------------------------ xScale --------------------------------
 
-
+		chart_x = w_size.innerWidth || e_size.clientWidth || g_size.clientWidth; 
 		xScale_zoom = chart.xScale
 			.domain([dataXRange.min , dataXRange.max])
-			.range([0, chartWidth - textRoom]);
+			.range([0, chart_x - textRoom - margin.right]);
 
 
 		chart.xAxis.scale(chart.xScale);
 
-		xGroup = chart.xAxisGroup
-			.call(chart.xAxis);
+		xGroup = chart.xAxisGroup.call(chart.xAxis);
 
 		chart.xLabel
 			.attr("transform", "translate(" + (margin.left + chartWidth / 2.0) + ", " + (chartHeight + margin.top + margin.bottom - axisFont / 2 ) + ")");
@@ -2546,8 +2500,8 @@
 			 .attr("x", function(d){ return chart.xScale(d[0] * timeStep);} )
 			 .attr("width",  function(d){ return chart.xScale((d[1] - d[0]) * timeStep)});
 
-		chart.selectAll(".list")
-			 .attr("transform", "translate( " + (chartWidth+25) + ", 10)");
+		// chart.selectAll(".list")
+		// 	 .attr("transform", "translate( " + (chartWidth+25) + ", 10)");
 
 			chart.plotArea.selectAll(".links")
 			.attr("y1", function(d){
@@ -2561,7 +2515,7 @@
 			});
 			// ------------------------------------- Keywords and boxes ---------------------------------------
 			
-			tagPos = chartWidth/2 - source4*75;
+			tagPos = chartWidth/2 - source4*(wordtags_width/2);
 
 			for (var count_all = 0; count_all < source4; count_all++){   
 			    boundingBox[count_all] = (tagPos + count_all*wordtags_width);  //110);
@@ -2734,7 +2688,7 @@
 			.style("font-size", "15px")
 			.text("Time: 0 min");
 
-		d3.xml("./styles/timer.svg").mimeType("image/svg+xml").get(function(error, xml) {
+		d3.xml("./prov/styles/timer.svg").mimeType("image/svg+xml").get(function(error, xml) {
 		   if (error) throw error;
 		   var svgElem = chart.xMarker.node().appendChild(xml.documentElement);
 			 d3.select(svgElem)
@@ -3177,12 +3131,6 @@
 	function drawBoxes(classInfo,num){
 
 		dataIn = classInfo[num]
-<<<<<<< HEAD
-		console.log("---------------------->>",num)
-=======
-		// console.log("---------------------->>",num)
->>>>>>> c02b9131b0263d821d1fa25aee011c80314a811a
-
 		var makeData2 = [];
 
 		for (var i = 0; i < dataIn.length; i++){
@@ -3213,75 +3161,16 @@
 			.attr("id", function(d,i){ return 'tag-'+ i }) // assign ID // This "id" is the segment number
 			.style("fill","none")
 			.attr("stroke", "none")
-<<<<<<< HEAD
-			.attr("height", function(d,i){
-			  
-				var this_height;
-				var yTarget = chart.yScale(d.source.y);
-				var ySource = chart.yScale(d.target.y);
-				var xTarget = chart.xScale(d.source.x);
-				var xSource = chart.xScale(d.target.x);
-					if (topicThreads > 2) {this_height = (Math.abs(yTarget - ySource) + 1/2*height);}
-					else {this_height = (Math.abs(yTarget - ySource) + 400)}
-			 	return this_height; })
-=======
-			// .attr("height", function(d,i){
-			// 	var this_height;
-			// 	var yTarget = chart.yScale(d.source.y);
-			// 	var ySource = chart.yScale(d.target.y);
-			// 	var xTarget = chart.xScale(d.source.x);
-			// 	var xSource = chart.xScale(d.target.x);
-			// 		if (topicThreads > 2) {this_height = (Math.abs(yTarget - ySource) + 1/2*height);}
-			// 		else {this_height = (Math.abs(yTarget - ySource) + 400)}
-			//  	return this_height; })
 			.attr("height", function(d,i){return height - 10; })
->>>>>>> c02b9131b0263d821d1fa25aee011c80314a811a
 			.attr("width",  function(d,i){
 				var yTarget = chart.yScale(d.source.y);
 				var ySource = chart.yScale(d.target.y);
 				var xTarget = chart.xScale(d.source.x);
 				var xSource = chart.xScale(d.target.x);
 				return Math.abs(xTarget - xSource)})
-<<<<<<< HEAD
-			.attr("y",function(d,i){
-				var this_y;
-				
-				var this_height;
-				var yTarget = chart.yScale(d.source.y);
-				var ySource = chart.yScale(d.target.y);
-				var xTarget = chart.xScale(d.source.x);
-				var xSource = chart.xScale(d.target.x);
-
-					if (topicThreads > 2) {
-						this_y = ((chart.yScale(d.source.y)));
-						this_height = (Math.abs(yTarget - ySource) + 1/2*height);
-					}
-					else {this_y = (chart.yScale(d.source.y) - 200);}
-			return this_y - this_height/2;})  
-			.attr("x",function(d,i){return chart.xScale(d.target.x);})
-			.on("mouseover", function(d,j) {
-				 console.log("---------------------->> mouse over")
-=======
-			// .attr("y",function(d,i){
-			// 	var this_y;
-				
-			// 	var this_height;
-			// 	var yTarget = chart.yScale(d.source.y);
-			// 	var ySource = chart.yScale(d.target.y);
-			// 	var xTarget = chart.xScale(d.source.x);
-			// 	var xSource = chart.xScale(d.target.x);
-
-			// 		if (topicThreads > 2) {
-			// 			this_y = ((chart.yScale(d.source.y)));
-			// 			this_height = (Math.abs(yTarget - ySource) + 1/2*height);
-			// 		}
-			// 		else {this_y = (chart.yScale(d.source.y) - 200);}
-			// return this_y - this_height/2;})  
 			.attr("y",5)  
 			.attr("x",function(d,i){return chart.xScale(d.target.x);})
 			.on("mouseover", function(d,j) {
-				 // console.log("---------------------->> mouse over")
->>>>>>> c02b9131b0263d821d1fa25aee011c80314a811a
 				 box_num_1 = d3.select(this).attr('class').split("-")[1]
 				 box_num_2 = d3.select(this).attr('id').split("-")[1]
 				 tooltip(d)
@@ -3291,12 +3180,7 @@
 					 tooltip(d)
 					 hoverSegLines(3, box_num_1,box_num_2);
 				}
-
-<<<<<<< HEAD
-			num_ = d3.select(this).attr('class').split("-")[1]
-=======
 				num_ = d3.select(this).attr('class').split("-")[1]
->>>>>>> c02b9131b0263d821d1fa25aee011c80314a811a
 				num_2 = d3.select(this).attr('id').split("-")[1]
 				 // console.log("ID", num_)
 				 // console.log("Itag", num_2)
@@ -3325,11 +3209,7 @@
 							.attr("x", 120)
 							.attr("text-anchor", "middle")
 							.attr("font-size", 22)
-<<<<<<< HEAD
-							.attr("class", "tspan" + j)
-=======
 							.attr("class", "tspan " + j)
->>>>>>> c02b9131b0263d821d1fa25aee011c80314a811a
 							.on("mouseover", (d2) => {
 								var chosenWords = wordtags.selectAll("text").filter((di)=>{
 									if (di.substring(0, 6) == d2.substring(0, 6)){
@@ -3347,11 +3227,7 @@
 								chosenWords.attr("fill", "black");//.attr("font-style", "normal").attr("font-size", 18);
 							});
 						}}})
-<<<<<<< HEAD
-				.attr("transform", "translate( " + (chartWidth+25) + ", 70)");
-=======
 				.attr("transform", "translate( " + (chartWidth - margin.right + 10) + ", 80)");
->>>>>>> c02b9131b0263d821d1fa25aee011c80314a811a
 
 				}
 
@@ -3366,15 +3242,10 @@
 				div1.transition()
 					.duration(300)
 					.style("opacity", 0);
-<<<<<<< HEAD
-			})
-			// .call(zoom);
-=======
 			});
 
 			chart.plotArea.selectAll(".pattern_icon").moveToFront();
 
->>>>>>> c02b9131b0263d821d1fa25aee011c80314a811a
 	}
 
 	function drawIcons(makeData2,num){
@@ -3406,7 +3277,7 @@
 					if (svgfile.split("")[0] == "f") {
 						svgfile = ""
 					}
-					return "./styles/"+ svgfile + ".svg";}
+					return "./prov/styles/"+ svgfile + ".svg";}
 					) 
 				.attr('height', '30')
 				.attr('width', '30')
@@ -3447,13 +3318,7 @@
 	}
 
 	function thinkaloud(){
-
-		// if (source5 == "-UModel-"){
-		// var new_jsonfile = "./data/NewIDs" + source5 + "/Dataset_" + array[0] + "/UserInteractions/" + array[1] + "_" + source2 + "_InteractionsLogs.json"; // .toString()
-		// }else{
-		// var new_jsonfile = "./data/NewIDs" + source5 + source6 + "/Dataset_" + array[0] + "/UserInteractions/" + array[1] + "_" + source2 + "_InteractionsLogs.json"; // .toString()
-		// }
-				var new_jsonfile = "./data/new_datasets/Dataset_" + array[0] + "/UserInteractions/"+ array[1] + "_" + source2 + "_InteractionsLogs.json";
+				var new_jsonfile = "./prov/data/new_datasets/Dataset_" + array[0] + "/UserInteractions/"+ array[1] + "_" + source2 + "_InteractionsLogs.json";
 
 		var count = 0;											
 		var count1 = 0;											
@@ -3809,10 +3674,10 @@
 								var yP = j ? (2.0*j + 2.0).toString()+"em" : "2.0em";
 								return yP;
 							})
-							.attr("x", 10)
+							.attr("x", 120)
 							.attr("text-anchor", "middle")
 							.attr("font-size", 22)
-							.attr("class", "tspan  " + j)
+							.attr("class", "tspan " + j)
 							.on("mouseover", (d2) => {
 								var chosenWords = wordtags.selectAll("text").filter((di)=>{
 									if (di.substring(0, 6) == d2.substring(0, 6)){
@@ -3830,7 +3695,7 @@
 								chosenWords.attr("fill", "black");//.attr("font-style", "normal").attr("font-size", 18);
 							});
 						}}})
-				.attr("transform", "translate( " + (chartWidth - margin.left + 10) + ", 80)");
+				.attr("transform", "translate( " + (chartWidth - margin.right + 10) + ", 80)");
 
 					timer = setTimeout(function(){
 						singling = Number(num_) + 1;
